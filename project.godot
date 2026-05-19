@@ -15,12 +15,18 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="AARPG"
+run/main_scene="uid://rkk4xot4up63"
 config/features=PackedStringArray("4.6")
 config/icon="res://icon.png"
 
 [autoload]
 
-GlobalGameInit="*res://GlobalGameInit.gd"
+ECS="*uid://dfqwl5njvdnmq"
+
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/missing_tool=0
 
 [display]
 
@@ -29,6 +35,10 @@ window/size/viewport_height=270
 window/size/window_width_override=1920
 window/size/window_height_override=1080
 window/stretch/mode="viewport"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gecs/plugin.cfg")
 
 [input]
 

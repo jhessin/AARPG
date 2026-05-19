@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="IsPlayer" format=3 uid="uid://do1xauvpnbuyb"]
+
+[ext_resource type="Script" uid="uid://sol7c8c0e4cm" path="res://ECS/Components/IsPlayer.gd" id="1_3nphn"]
+
+[resource]
+script = ExtResource("1_3nphn")
+metadata/_custom_type_script = "uid://sol7c8c0e4cm"

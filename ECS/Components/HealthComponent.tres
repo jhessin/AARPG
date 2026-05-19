@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HealthComponent" format=3 uid="uid://vqvkd16dx5dw"]
+
+[ext_resource type="Script" uid="uid://du7vgucaf7wlf" path="res://ECS/Components/HealthComponent.gd" id="1_qep72"]
+
+[resource]
+script = ExtResource("1_qep72")
+current = null
+metadata/_custom_type_script = "uid://du7vgucaf7wlf"
