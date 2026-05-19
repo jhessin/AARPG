@@ -9,28 +9,11 @@ var state: String = 'idle'
 @onready var animator: AnimationPlayer = $CharacterBody2D/AnimationPlayer
 
 
-# func _process(_delta: float) -> void:
-# 	var mov: VelocityComponent = get_component(VelocityComponent) as VelocityComponent
-# 	var anim_comp: AnimationComponent = get_component(AnimationComponent) as AnimationComponent
-#
-# 	if mov:
-# 		character.velocity = mov.direction * mov.speed
-#
-# 	if anim_comp:
-# 		animator.play(anim_comp.animation_name)
-# func _physics_process(_delta: float) -> void:
-# 	character.move_and_slide()
-func on_ready() -> void:
-	var is_char: IsPlayer = IsPlayer.new()
-	var anim_comp: AnimationComponent = AnimationComponent.new(animator)
-
-	is_char.model = character
-	add_component(anim_comp)
-	add_component(is_char)
-
-
 func define_components() -> Array:
+	var anim_comp: AnimationComponent = AnimationComponent.new(animator, sprite)
 	return [
 		HealthComponent.new(100),
 		VelocityComponent.new(100.0),
+		IsPlayer.new(),
+		anim_comp,
 	]

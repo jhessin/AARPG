@@ -135,7 +135,6 @@ _data = {
 
 [node name="Player" type="Node2D" unique_id=572429198]
 script = ExtResource("1_q3lat")
-metadata/_edit_group_ = true
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1868610309]
 
