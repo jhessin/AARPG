@@ -22,14 +22,17 @@ script = ExtResource("3_o00ia")
 
 [node name="InputSystem" type="Node" parent="World/Systems" unique_id=1043168596]
 script = ExtResource("4_4bqqs")
+group = "gameplay"
 metadata/_custom_type_script = "uid://582hr1tulwgo"
 
 [node name="AnimationSystem" type="Node" parent="World/Systems" unique_id=1535756648]
 script = ExtResource("3_o00ia")
+group = "gameplay"
 metadata/_custom_type_script = "uid://cprat7sfnaee2"
 
 [node name="MovementSystem" type="Node" parent="World/Systems" unique_id=102306222]
 script = ExtResource("3_is3ju")
+group = "physics"
 metadata/_custom_type_script = "uid://dlsy6oicxae5t"
 
 [node name="Entities" type="Node" parent="World" unique_id=1328379130]

@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="VelocityComponent" format=3 uid="uid://co4uh0hmyf01"]
-
-[ext_resource type="Script" uid="uid://c8mk6e2fgeqrp" path="res://ECS/Components/VelocityComponent.gd" id="1_1apvp"]
-
-[resource]
-script = ExtResource("1_1apvp")
-speed = 9999999.0
-metadata/_custom_type_script = "uid://c8mk6e2fgeqrp"

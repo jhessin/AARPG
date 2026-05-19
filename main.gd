@@ -8,8 +8,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	ECS.process(delta)
+	ECS.process(delta, 'gameplay')
 
 
 func _physics_process(delta: float) -> void:
-	ECS.process(delta)
+	ECS.process(delta, 'physics')

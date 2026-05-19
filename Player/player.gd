@@ -10,10 +10,18 @@ var state: String = 'idle'
 
 
 func define_components() -> Array:
-	var anim_comp: AnimationComponent = AnimationComponent.new(animator, sprite)
+	var anim_comp: AnimationComponent = AnimationComponent.new()
+	var body_comp: BodyComponent = BodyComponent.new()
+
+	anim_comp.sprite = sprite
+	anim_comp.animator = animator
+
+	body_comp.body = character
+
 	return [
 		HealthComponent.new(100),
 		VelocityComponent.new(100.0),
 		IsPlayer.new(),
 		anim_comp,
+		body_comp,
 	]
