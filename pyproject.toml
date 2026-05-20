@@ -1,0 +1,2 @@
+[tool.pyright]
+dummyVariableNames = ["_", "__", "_*", "unused"]

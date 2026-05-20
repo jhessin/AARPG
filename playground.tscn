@@ -1,41 +1,38 @@
 [gd_scene format=3 uid="uid://rkk4xot4up63"]
 
-[ext_resource type="Script" uid="uid://5ahf4xfclc2i" path="res://main.gd" id="1_wt17y"]
-[ext_resource type="Script" uid="uid://cdu5tlyk72uu4" path="res://addons/gecs/ecs/world.gd" id="2_m8u5f"]
-[ext_resource type="Script" uid="uid://dlsy6oicxae5t" path="res://ECS/Systems/MovementSystem.gd" id="3_is3ju"]
-[ext_resource type="Script" uid="uid://cprat7sfnaee2" path="res://ECS/Systems/AnimationSystem.gd" id="3_o00ia"]
-[ext_resource type="Script" uid="uid://582hr1tulwgo" path="res://ECS/Systems/InputSystem.gd" id="4_4bqqs"]
+[ext_resource type="Script" path="res://game_world.py" id="1_wt17y"]
 [ext_resource type="PackedScene" uid="uid://pnqvgbqv3cny" path="res://Player/Player.tscn" id="4_o00ia"]
 
 [node name="Playground" type="Node2D" unique_id=429018773]
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+visible = true
+modulate = Color(1, 1, 1, 1)
+self_modulate = Color(1, 1, 1, 1)
+show_behind_parent = false
+top_level = false
+clip_children = 0
+light_mask = 1
+visibility_layer = 1
+z_index = 0
+z_as_relative = true
+y_sort_enabled = false
+texture_filter = 0
+texture_repeat = 0
+use_parent_material = false
+position = Vector2(0, 0)
+rotation = 0.0
+scale = Vector2(1, 1)
+skew = 0.0
 script = ExtResource("1_wt17y")
 
-[node name="World" type="Node" parent="." unique_id=1996880553]
-unique_name_in_owner = true
-script = ExtResource("2_m8u5f")
-entity_nodes_root = NodePath("Entities")
-system_nodes_root = NodePath("Systems")
-metadata/_custom_type_script = "uid://cdu5tlyk72uu4"
-
-[node name="Systems" type="Node" parent="World" unique_id=1762193840]
-script = ExtResource("3_o00ia")
-
-[node name="InputSystem" type="Node" parent="World/Systems" unique_id=1043168596]
-script = ExtResource("4_4bqqs")
-group = "gameplay"
-metadata/_custom_type_script = "uid://582hr1tulwgo"
-
-[node name="AnimationSystem" type="Node" parent="World/Systems" unique_id=1535756648]
-script = ExtResource("3_o00ia")
-group = "gameplay"
-metadata/_custom_type_script = "uid://cprat7sfnaee2"
-
-[node name="MovementSystem" type="Node" parent="World/Systems" unique_id=102306222]
-script = ExtResource("3_is3ju")
-group = "physics"
-metadata/_custom_type_script = "uid://dlsy6oicxae5t"
-
-[node name="Entities" type="Node" parent="World" unique_id=1328379130]
-
-[node name="Player" parent="World/Entities" unique_id=314937503 instance=ExtResource("4_o00ia")]
+[node name="Player" parent="." unique_id=314937503 node_paths=PackedStringArray("sprite", "animator") instance=ExtResource("4_o00ia")]
 position = Vector2(260, 151)
+sprite = NodePath("")
+animator = NodePath("")
