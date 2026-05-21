@@ -32,7 +32,5 @@ scale = Vector2(1, 1)
 skew = 0.0
 script = ExtResource("1_wt17y")
 
-[node name="Player" parent="." unique_id=314937503 node_paths=PackedStringArray("sprite", "animator") instance=ExtResource("4_o00ia")]
+[node name="Player" parent="." unique_id=314937503 instance=ExtResource("4_o00ia")]
 position = Vector2(260, 151)
-sprite = NodePath("")
-animator = NodePath("")
