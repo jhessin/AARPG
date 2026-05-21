@@ -30,3 +30,4 @@ class Player(CharacterBody2D):
             AnimationComponent(self.animator, self.sprite),
             BodyComponent(self),
         )
+        print(f"Player initialized as entity #{self._entity}")
