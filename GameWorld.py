@@ -8,16 +8,20 @@ from ECS.Systems.InputSystem import InputSystem
 
 @gdclass
 class GameWorld(Node2D):
+    physics_systems: list[esper.Processor] = []
 
-    @gdmethod
-    def _ready(self) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def _ready(self) -> None:
         print("Preparing GameWorldManager")
         esper.add_processor(InputSystem(), priority=1)
-        esper.add_processor(MovementSystem())
         esper.add_processor(AnimationSystem())
 
-    @gdmethod
-    def _process(  # pyright: ignore[reportIncompatibleMethodOverride]
-        self, delta: "float"
-    ) -> None:
+        # Use one or the other
+        # esper.add_processor(MovementSystem())
+        self.physics_systems.append(MovementSystem())
+
+    def _process(self, delta: "float") -> None:
         esper.process(delta)
+
+    def _physics_process(self, delta: "float") -> None:
+        for system in self.physics_systems:
+            system.process(delta)

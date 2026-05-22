@@ -10,6 +10,7 @@ from ECS.components import (
     HealthComponent,
     IsPlayer,
     VelocityComponent,
+    StateComponent,
 )
 
 
@@ -29,5 +30,6 @@ class Player(CharacterBody2D):
             IsPlayer(),
             AnimationComponent(self.animator, self.sprite),
             BodyComponent(self),
+            StateComponent(),
         )
         print(f"Player initialized as entity #{self._entity}")
