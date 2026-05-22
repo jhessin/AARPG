@@ -12,21 +12,19 @@ class InputSystem(esper.Processor):
         for _, (vel, state, *_) in esper.get_components(
             VelocityComponent, StateComponent, IsPlayer
         ):
+            # Get the input data from the user.
             move: Vector2 = Vector2.new3(
-                input_manager.get_action_strength("right")
-                - input_manager.get_action_strength("left"),
-                input_manager.get_action_strength("down")
-                - input_manager.get_action_strength("up"),
-            )
+                input_manager.get_axis("left", "right"),
+                input_manager.get_axis("up", "down"),
+            ).normalized()
 
-            length = move.length()
-            print(length)
-            move = move.normalized()
+            # Set the velocity direction of the player
             if vel:
                 vel.x = move.x
                 vel.y = move.y
 
-            if length > 0.0:
+            # Update the player state
+            if move.length() > 0.0:
                 if state.current == PlayerState.IDLE:
                     state.previous = state.current
                     state.current = PlayerState.WALK
@@ -34,3 +32,13 @@ class InputSystem(esper.Processor):
                 if state.current == PlayerState.WALK:
                     state.previous = state.current
                     state.current = PlayerState.IDLE
+
+            # update the facing of the player
+            new_dir: Vector2 = state.cardinal_direction
+            if move.length() == 0.0:
+                pass
+            elif move.y == 0:
+                new_dir = Vector2.LEFT if move.x < 0 else Vector2.RIGHT
+            elif move.x == 0:
+                new_dir = Vector2.UP if move.y < 0 else Vector2.DOWN
+            state.cardinal_direction = new_dir

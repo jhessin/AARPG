@@ -38,13 +38,7 @@ class AnimationSystem(esper.Processor):
         return True
 
     def _update_direction(self) -> bool:
-        new_dir: Vector2 = self.cardinal_direction
-        if self.direction == Vector2.ZERO:
-            return False
-        if self.direction.y == 0:
-            new_dir = Vector2.LEFT if self.direction.x < 0 else Vector2.RIGHT
-        elif self.direction.x == 0:
-            new_dir = Vector2.UP if self.direction.y < 0 else Vector2.DOWN
+        new_dir: Vector2 = self.state_comp.cardinal_direction
 
         if new_dir == self.cardinal_direction:
             return False

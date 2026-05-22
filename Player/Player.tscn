@@ -134,6 +134,9 @@ _data = {
 }
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1868610309]
+collision_mask = 16
+motion_mode = 1
+wall_min_slide_angle = 0.1675516
 script = ExtResource("1_q3lat")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1472060122]
@@ -146,3 +149,5 @@ hframes = 21
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1919859737]
 libraries/ = SubResource("AnimationLibrary_tok1r")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1478284068]

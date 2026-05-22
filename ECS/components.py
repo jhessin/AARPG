@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
+from typing import Optional
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.Node import Vector2
 from py4godot.classes.Sprite2D import Sprite2D
@@ -8,7 +9,7 @@ from py4godot.classes.CharacterBody2D import CharacterBody2D
 
 @dataclass
 class VelocityComponent:
-    speed: float = 200.0
+    speed: float = 100.0
     x: float = 0.0
     y: float = 0.0
 
@@ -46,11 +47,7 @@ class PlayerState(Enum):
                 return "walk"
 
 
-@dataclass()
 class StateComponent:
-    current: PlayerState
-    previous: PlayerState
-
-    def __init__(self, initial_state: PlayerState = PlayerState.IDLE) -> None:
-        self.current = initial_state
-        self.previous = initial_state
+    current: PlayerState = PlayerState.IDLE
+    previous: PlayerState = current
+    cardinal_direction: Vector2 = Vector2.DOWN

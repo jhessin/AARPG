@@ -1,5 +1,5 @@
 import esper
-from py4godot import gdclass, gdmethod
+from py4godot import gdclass
 from py4godot.classes.Node2D import Node2D
 from ECS.Systems.AnimationSystem import AnimationSystem
 from ECS.Systems.MovementSystem import MovementSystem
