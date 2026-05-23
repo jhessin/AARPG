@@ -184,7 +184,7 @@ _data = {
 &"walk_up": SubResource("Animation_s1rgi")
 }
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1868610309 node_paths=PackedStringArray("sprite", "animator")]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1868610309]
 unique_name_in_owner = false
 process_mode = 0
 process_priority = 0
@@ -231,8 +231,6 @@ platform_floor_layers = 4294967295
 platform_wall_layers = 0
 safe_margin = 0.08
 script = ExtResource("1_q3lat")
-sprite = NodePath("")
-animator = NodePath("")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1472060122]
 shape = SubResource("CircleShape2D_5k2my")

@@ -1,5 +1,6 @@
 import esper
 from py4godot.classes.CharacterBody2D import CharacterBody2D
+from py4godot.classes.InputEvent import InputEvent
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot import gdclass
@@ -8,6 +9,7 @@ from ECS.components import (
     AnimationComponent,
     BodyComponent,
     HealthComponent,
+    InputComponent,
     IsPlayer,
     VelocityComponent,
     StateComponent,
@@ -31,4 +33,9 @@ class Player(CharacterBody2D):
             AnimationComponent(self.animator, self.sprite),
             BodyComponent(self),
             StateComponent(),
+            InputComponent(),
         )
+
+    def _unhandled_input(self, event: InputEvent) -> None:
+        if input_cmp := esper.try_component(self._entity, InputComponent):
+            input_cmp.queue.append(event)
