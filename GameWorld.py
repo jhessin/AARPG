@@ -10,7 +10,6 @@ from ECS.Systems.InputSystem import InputSystem
 class GameWorld(Node2D):
 
     def _ready(self) -> None:
-        print("Preparing GameWorldManager")
         esper.add_processor(InputSystem(), priority=1)
         esper.add_processor(AnimationSystem())
 

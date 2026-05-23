@@ -16,7 +16,6 @@ class AnimationSystem(esper.Processor):
             AnimationComponent, StateComponent
         ):
             if anim and state:
-                print("AnimationComponent and StateComponent found!")
                 anim.sprite.scale.x = (
                     -1 if state.cardinal_direction == Vector2.LEFT else 1
                 )
@@ -27,5 +26,4 @@ class AnimationSystem(esper.Processor):
                 )
                 target_animation = f"{state.current}_{anim_direction}"
                 if anim.animator.get_current_animation() != target_animation:
-                    print(f"Running animation: {target_animation}")
                     anim.animator.play(target_animation)

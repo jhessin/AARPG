@@ -32,4 +32,3 @@ class Player(CharacterBody2D):
             BodyComponent(self),
             StateComponent(),
         )
-        print(f"Player initialized as entity #{self._entity}")

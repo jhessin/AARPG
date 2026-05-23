@@ -5,6 +5,7 @@ from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.Node import Vector2
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.CharacterBody2D import CharacterBody2D
+from py4godot.classes.InputEvent import InputEvent
 
 
 @dataclass
@@ -38,6 +39,7 @@ class IsPlayer:
 class PlayerState(Enum):
     IDLE = auto()
     WALK = auto()
+    ATTACK = auto()
 
     def __str__(self) -> str:
         match self:
@@ -45,9 +47,15 @@ class PlayerState(Enum):
                 return "idle"
             case PlayerState.WALK:
                 return "walk"
+            case PlayerState.ATTACK:
+                return "attack"
 
 
 class StateComponent:
     current: PlayerState = PlayerState.IDLE
     previous: PlayerState = current
     cardinal_direction: Vector2 = Vector2.DOWN
+
+
+class InputComponent:
+    queue: list[InputEvent] = []
