@@ -1,8 +1,11 @@
 import esper
 from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.InputEvent import InputEvent
+from py4godot.classes.AudioStream import AudioStream
+from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
+from py4godot.classes.ResourceLoader import ResourceLoader
 from py4godot import gdclass, gdmethod
 from py4godot.signals import Callable
 
@@ -14,18 +17,24 @@ from ECS.components import (
     IsPlayer,
     VelocityComponent,
     StateComponent,
+    AudioComponent,
+    ATTACK,
 )
 
 
 @gdclass
 class Player(CharacterBody2D):
-    sprite: Sprite2D
-    animator: AnimationPlayer
     _entity: int
 
     def _ready(self) -> None:
-        self.sprite = self.get_node("Sprite2D")
-        self.animator = self.get_node("AnimationPlayer")
+        self.sprite: Sprite2D = self.get_node("Sprite2D")
+        self.animator: AnimationPlayer = self.get_node("AnimationPlayer")
+        self.audio_player: AudioStreamPlayer2D = self.get_node("Audio/AudioPlayer")
+        sound_path: str = "res://Player/Audio/SwordSwoosh.wav"
+
+        attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)
+
+        sounds: dict[str, AudioStream] = {ATTACK: attack_sound}
 
         self._entity = esper.create_entity(
             HealthComponent(),
@@ -35,6 +44,7 @@ class Player(CharacterBody2D):
             BodyComponent(self),
             StateComponent(),
             InputComponent(),
+            AudioComponent(self.audio_player, sounds),
         )
         self.animator.animation_finished.connect(
             Callable.new2(self, "_on_animation_finished")

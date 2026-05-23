@@ -4,6 +4,7 @@ from py4godot.classes.Node2D import Node2D
 from ECS.Systems.AnimationSystem import AnimationSystem
 from ECS.Systems.MovementSystem import MovementSystem
 from ECS.Systems.InputSystem import InputSystem
+from ECS.Systems.SoundSystem import SoundSystem
 
 
 @gdclass
@@ -12,6 +13,7 @@ class GameWorld(Node2D):
     def _ready(self) -> None:
         esper.add_processor(InputSystem(), priority=1)
         esper.add_processor(AnimationSystem())
+        esper.add_processor(SoundSystem())
 
         # Use one or the other
         # esper.add_processor(MovementSystem())

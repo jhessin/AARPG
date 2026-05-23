@@ -1,11 +1,16 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Optional
 from py4godot.classes.AnimationPlayer import AnimationPlayer
+from py4godot.classes.AudioStream import AudioStream
+from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
 from py4godot.classes.Node import Vector2
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.InputEvent import InputEvent
+
+# Adding constants here
+ATTACK = "attack"
+IDLE = "idle"
 
 
 @dataclass
@@ -19,6 +24,13 @@ class VelocityComponent:
 class AnimationComponent:
     animator: AnimationPlayer
     sprite: Sprite2D
+
+
+@dataclass()
+class AudioComponent:
+    player: AudioStreamPlayer2D
+    sounds: dict[str, AudioStream] = field(default_factory=dict)
+    current_key: str = ""
 
 
 @dataclass
