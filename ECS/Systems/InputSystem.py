@@ -2,21 +2,47 @@ import esper
 from py4godot.classes.Input import Input
 from py4godot.classes.Node import Vector2
 
-from ..components import IsPlayer, PlayerState, StateComponent, VelocityComponent
+from ..components import (
+    InputComponent,
+    IsPlayer,
+    PlayerState,
+    StateComponent,
+    VelocityComponent,
+)
 
 
 class InputSystem(esper.Processor):
     def process(self, _delta: float) -> None:
         del _delta
         input_manager = Input.instance()
-        for _, (vel, state, *_) in esper.get_components(
-            VelocityComponent, StateComponent, IsPlayer
+        for _, (vel, state, input_q, *_) in esper.get_components(
+            VelocityComponent, StateComponent, InputComponent, IsPlayer
         ):
             # Get the input data from the user.
             move: Vector2 = Vector2.new3(
                 input_manager.get_axis("left", "right"),
                 input_manager.get_axis("up", "down"),
             ).normalized()
+
+            # Check if I'm already attacking
+            if state.current == PlayerState.ATTACK:
+                move.x = move.y = 0.0
+                input_q.queue.clear()  # don't queue any more attacks
+                continue  # skip directional evaluations until the attack finishes
+
+            # Check for discrete attack intent
+            has_attacked = False
+            for event in input_q.queue:
+                if event.is_action_pressed("attack"):
+                    has_attacked = True
+                    break
+            input_q.queue.clear()  # clean evnt buffer for this frame
+
+            if has_attacked:
+                state.previous = state.current
+                state.current = PlayerState.ATTACK
+                vel.x = vel.y = 0.0
+                continue  # Instantly switch states
 
             # Set the velocity direction of the player
             if vel:
