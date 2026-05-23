@@ -6,7 +6,7 @@ from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.ResourceLoader import ResourceLoader
-from py4godot import gdclass, gdmethod
+from py4godot import gdclass, gdmethod, gdproperty
 from py4godot.signals import Callable
 
 from ECS.components import (
@@ -25,8 +25,10 @@ from ECS.components import (
 @gdclass
 class Player(CharacterBody2D):
     _entity: int
+    decelerate_speed: float = gdproperty(float, 5.0)
 
     def _ready(self) -> None:
+        self.decelerate_speed = max(1.0, min(self.decelerate_speed, 20.0))
         self.sprite: Sprite2D = self.get_node("Sprite2D")
         self.animator: AnimationPlayer = self.get_node("AnimationPlayer")
         self.audio_player: AudioStreamPlayer2D = self.get_node("Audio/AudioPlayer")
@@ -42,7 +44,7 @@ class Player(CharacterBody2D):
             IsPlayer(),
             AnimationComponent(self.animator, self.sprite),
             BodyComponent(self),
-            StateComponent(),
+            StateComponent(decelerate_speed=self.decelerate_speed),
             InputComponent(),
             AudioComponent(self.audio_player, sounds),
         )

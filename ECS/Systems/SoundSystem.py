@@ -1,4 +1,5 @@
 import esper
+from random import uniform
 
 from ECS.components import AudioComponent, PlayerState, StateComponent, ATTACK
 
@@ -13,6 +14,7 @@ class SoundSystem(esper.Processor):
                     if attack_sound := audio.sounds.get("attack"):
                         if audio.player.get_stream() != attack_sound:
                             audio.player.stream = attack_sound
+                        audio.player.pitch_scale = uniform(0.9, 1.1)
                         audio.player.play()
                         audio.current_key = ATTACK
             else:

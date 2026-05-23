@@ -63,12 +63,14 @@ class PlayerState(Enum):
                 return "attack"
 
 
+@dataclass()
 class StateComponent:
     current: PlayerState = PlayerState.IDLE
     previous: PlayerState = current
     time_in_state: float = 0.0
-    cardinal_direction: Vector2 = Vector2.DOWN
+    cardinal_direction: Vector2 = field(default_factory=lambda: Vector2.DOWN)
     animation_is_finished: bool = False
+    decelerate_speed: float = 5.0
 
 
 class InputComponent:

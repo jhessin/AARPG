@@ -43,7 +43,6 @@ class InputSystem(esper.Processor):
                 state.previous = state.current
                 state.current = PlayerState.ATTACK
                 state.time_in_state = 0.0
-                vel.x = vel.y = 0.0
                 continue  # Instantly switch states
 
             # Set the velocity direction of the player
