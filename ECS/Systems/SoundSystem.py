@@ -10,8 +10,8 @@ class SoundSystem(esper.Processor):
         for _, (state, audio) in esper.get_components(StateComponent, AudioComponent):
 
             if state.current == PlayerState.ATTACK:
-                if audio.current_key != "attack":
-                    if attack_sound := audio.sounds.get("attack"):
+                if audio.current_key != ATTACK:
+                    if attack_sound := audio.sounds.get(ATTACK):
                         if audio.player.get_stream() != attack_sound:
                             audio.player.stream = attack_sound
                         audio.player.pitch_scale = uniform(0.9, 1.1)
@@ -19,7 +19,7 @@ class SoundSystem(esper.Processor):
                         audio.current_key = ATTACK
             else:
                 # if the player is no longer attacking but the audio tag is active
-                if audio.current_key == "attack":
+                if audio.current_key == ATTACK:
                     audio.player.stop()
                     # This crashes py4godot
                     # audio.player.stream = None

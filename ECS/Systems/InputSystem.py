@@ -3,6 +3,7 @@ from py4godot.classes.Input import Input
 from py4godot.classes.Node import Vector2
 
 from ..components import (
+    ATTACK,
     InputComponent,
     IsPlayer,
     PlayerState,
@@ -34,7 +35,7 @@ class InputSystem(esper.Processor):
             # Check for discrete attack intent
             has_attacked = False
             for event in input_q.queue:
-                if event.is_action_pressed("attack"):
+                if event.is_action_pressed(ATTACK):
                     has_attacked = True
                     break
             input_q.queue.clear()  # clean evnt buffer for this frame

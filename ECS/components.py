@@ -1,16 +1,20 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
+from py4godot.classes.Node2D import Node2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.AudioStream import AudioStream
 from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
 from py4godot.classes.Node import Vector2
 from py4godot.classes.Sprite2D import Sprite2D
-from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.InputEvent import InputEvent
+from py4godot.classes.Area2D import Area2D
+
+# from py4godot.classes.CharacterBody2D import CharacterBody2D
 
 # Adding constants here
 ATTACK = "attack"
 IDLE = "idle"
+WALK = "walk"
 
 
 @dataclass
@@ -35,13 +39,19 @@ class AudioComponent:
 
 @dataclass
 class BodyComponent:
-    body: CharacterBody2D
+    body: Node2D
 
 
 @dataclass
 class HealthComponent:
-    maximum: float = 100.0
-    current: float = maximum
+    parent: Node2D
+    maximum: float
+    current: float
+
+    def __init__(self, parent: Node2D, maximum: float = 100.0) -> None:
+        self.parent = parent
+        self.maximum = maximum
+        self.current = maximum
 
 
 class IsPlayer:
@@ -56,11 +66,11 @@ class PlayerState(Enum):
     def __str__(self) -> str:
         match self:
             case PlayerState.IDLE:
-                return "idle"
+                return IDLE
             case PlayerState.WALK:
-                return "walk"
+                return WALK
             case PlayerState.ATTACK:
-                return "attack"
+                return ATTACK
 
 
 @dataclass()
@@ -75,3 +85,15 @@ class StateComponent:
 
 class InputComponent:
     queue: list[InputEvent] = []
+
+
+@dataclass()
+class HitboxComponent:
+    node: Area2D = field(default_factory=Area2D.new)
+    damage: float = 10.0
+    knockback_force: float = 300.0
+
+
+@dataclass()
+class HurtboxComponent:
+    node: Area2D = field(default_factory=Area2D.new)

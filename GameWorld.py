@@ -5,6 +5,7 @@ from ECS.Systems.AnimationSystem import AnimationSystem
 from ECS.Systems.MovementSystem import MovementSystem
 from ECS.Systems.InputSystem import InputSystem
 from ECS.Systems.SoundSystem import SoundSystem
+from ECS.Systems.CombatSystem import CombatSystem
 
 
 @gdclass
@@ -14,6 +15,7 @@ class GameWorld(Node2D):
         esper.add_processor(InputSystem(), priority=1)
         esper.add_processor(AnimationSystem())
         esper.add_processor(SoundSystem())
+        esper.add_processor(CombatSystem())
 
         # Use one or the other
         # esper.add_processor(MovementSystem())

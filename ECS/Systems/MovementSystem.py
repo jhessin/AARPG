@@ -1,5 +1,6 @@
 import esper
 from py4godot.classes.core import Vector2
+from py4godot.classes.CharacterBody2D import CharacterBody2D
 
 from ECS.components import BodyComponent, PlayerState, StateComponent, VelocityComponent
 
@@ -14,6 +15,11 @@ class MovementSystem(esper.Processor):
                 if state.current == PlayerState.ATTACK:
                     vel.x -= vel.x * state.decelerate_speed * delta
                     vel.y -= vel.y * state.decelerate_speed * delta
-            body_comp.body.velocity = Vector2.new3(vel.x, vel.y) * vel.speed
 
-            body_comp.body.move_and_slide()
+            if isinstance(body_comp.body, CharacterBody2D):
+                body_comp.body.velocity = Vector2.new3(vel.x, vel.y) * vel.speed
+
+                body_comp.body.move_and_slide()
+            else:
+                vel.x = 0.0
+                vel.y = 0.0

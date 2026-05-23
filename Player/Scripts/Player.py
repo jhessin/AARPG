@@ -8,6 +8,7 @@ from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.ResourceLoader import ResourceLoader
 from py4godot import gdclass, gdmethod, gdproperty
 from py4godot.signals import Callable
+from GeneralNodes.HitBox.HitBox import HitBox
 
 from ECS.components import (
     AnimationComponent,
@@ -32,6 +33,7 @@ class Player(CharacterBody2D):
         self.sprite: Sprite2D = self.get_node("Sprite2D")
         self.animator: AnimationPlayer = self.get_node("AnimationPlayer")
         self.audio_player: AudioStreamPlayer2D = self.get_node("Audio/AudioPlayer")
+        self.hit_box: HitBox = self.get_node("HitBox").get_pyscript()
         sound_path: str = "res://Player/Audio/SwordSwoosh.wav"
 
         attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)
@@ -39,7 +41,9 @@ class Player(CharacterBody2D):
         sounds: dict[str, AudioStream] = {ATTACK: attack_sound}
 
         self._entity = esper.create_entity(
-            HealthComponent(),
+            HealthComponent(
+                self,
+            ),
             VelocityComponent(),
             IsPlayer(),
             AnimationComponent(self.animator, self.sprite),
@@ -47,6 +51,7 @@ class Player(CharacterBody2D):
             StateComponent(decelerate_speed=self.decelerate_speed),
             InputComponent(),
             AudioComponent(self.audio_player, sounds),
+            self.hit_box.component,
         )
         self.animator.animation_finished.connect(
             Callable.new2(self, "_on_animation_finished")
@@ -60,6 +65,6 @@ class Player(CharacterBody2D):
     def _on_animation_finished(self, anim_name: str) -> None:
         anim_name = str(anim_name)
         # Godot passes the name of the finished clip as a parameter
-        if anim_name.startswith("attack"):
+        if anim_name.startswith(ATTACK):
             if state := esper.try_component(self._entity, StateComponent):
                 state.animation_is_finished = True
