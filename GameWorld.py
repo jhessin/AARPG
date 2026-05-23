@@ -8,7 +8,6 @@ from ECS.Systems.InputSystem import InputSystem
 
 @gdclass
 class GameWorld(Node2D):
-    physics_system: esper.Processor
 
     def _ready(self) -> None:
         print("Preparing GameWorldManager")
@@ -17,10 +16,12 @@ class GameWorld(Node2D):
 
         # Use one or the other
         # esper.add_processor(MovementSystem())
-        self.physics_system = MovementSystem()
+        self.physics_systems: list[esper.Processor] = []
+        self.physics_systems.append(MovementSystem())
 
     def _process(self, delta: "float") -> None:
         esper.process(delta)
 
     def _physics_process(self, delta: "float") -> None:
-        self.physics_system.process(delta)
+        for system in self.physics_systems:
+            system.process(delta)
