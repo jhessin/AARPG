@@ -34,11 +34,9 @@ class InputSystem(esper.Processor):
                     state.current = PlayerState.IDLE
 
             # update the facing of the player
-            new_dir: Vector2 = state.cardinal_direction
             if move.length() == 0.0:
                 pass
             elif move.y == 0:
-                new_dir = Vector2.LEFT if move.x < 0 else Vector2.RIGHT
+                state.cardinal_direction = Vector2.LEFT if move.x < 0 else Vector2.RIGHT
             elif move.x == 0:
-                new_dir = Vector2.UP if move.y < 0 else Vector2.DOWN
-            state.cardinal_direction = new_dir
+                state.cardinal_direction = Vector2.UP if move.y < 0 else Vector2.DOWN
