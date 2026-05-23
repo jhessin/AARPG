@@ -13,11 +13,12 @@ from ..components import (
 
 class InputSystem(esper.Processor):
     def process(self, _delta: float) -> None:
-        del _delta
         input_manager = Input.instance()
         for _, (vel, state, input_q, *_) in esper.get_components(
             VelocityComponent, StateComponent, InputComponent, IsPlayer
         ):
+            state.time_in_state += _delta
+
             # Get the input data from the user.
             move: Vector2 = Vector2.new3(
                 input_manager.get_axis("left", "right"),
@@ -41,6 +42,7 @@ class InputSystem(esper.Processor):
             if has_attacked:
                 state.previous = state.current
                 state.current = PlayerState.ATTACK
+                state.time_in_state = 0.0
                 vel.x = vel.y = 0.0
                 continue  # Instantly switch states
 
@@ -54,10 +56,12 @@ class InputSystem(esper.Processor):
                 if state.current == PlayerState.IDLE:
                     state.previous = state.current
                     state.current = PlayerState.WALK
+                    state.time_in_state = 0.0
             else:
                 if state.current == PlayerState.WALK:
                     state.previous = state.current
                     state.current = PlayerState.IDLE
+                    state.time_in_state = 0.0
 
             # update the facing of the player
             if move.length() == 0.0:

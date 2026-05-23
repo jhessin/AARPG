@@ -1,7 +1,7 @@
-from typing import Literal
 import esper
 from py4godot.classes.core import Vector2
 from ..components import (
+    PlayerState,
     StateComponent,
     AnimationComponent,
 )
@@ -16,6 +16,8 @@ class AnimationSystem(esper.Processor):
             AnimationComponent, StateComponent
         ):
             if anim and state:
+                self.state: StateComponent = state
+                self.anim: AnimationComponent = anim
                 anim.sprite.scale.x = (
                     -1 if state.cardinal_direction == Vector2.LEFT else 1
                 )
@@ -27,3 +29,10 @@ class AnimationSystem(esper.Processor):
                 target_animation = f"{state.current}_{anim_direction}"
                 if anim.animator.get_current_animation() != target_animation:
                     anim.animator.play(target_animation)
+
+                if state.current == PlayerState.ATTACK:
+                    if state.animation_is_finished:
+                        prev: PlayerState = state.previous
+                        state.previous = state.current
+                        state.current = prev
+                        state.animation_is_finished = False
