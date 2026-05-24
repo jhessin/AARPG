@@ -16,17 +16,25 @@ class AnimationSystem(esper.Processor):
             AnimationComponent, StateComponent
         ):
             if anim and state:
-                self.state: StateComponent = state
-                self.anim: AnimationComponent = anim
+                # Flip the sprite if the cardinal_direction is facing left
                 anim.sprite.flip_h = state.cardinal_direction == Vector2.LEFT
-                anim.sprite.get_node("%EffectAnchor").scale.x = (
-                    -1 if state.cardinal_direction == Vector2.LEFT else 1
-                )
+
+                # similarly scale the EffectAnchor to flip the effects if there
+                # is one
+                if effect_anchor := anim.sprite.get_node("%EffectAnchor"):
+                    effect_anchor.scale.x = (
+                        -1 if state.cardinal_direction == Vector2.LEFT else 1
+                    )
+
+                # Get the directional portion of the animation to play
                 anim_direction = (
                     "down"
                     if state.cardinal_direction == Vector2.DOWN
                     else "up" if state.cardinal_direction == Vector2.UP else "side"
                 )
+
+                # Pivot the weapon (Area2D) to match the direction the character
+                # is facing
                 if anim.weapon_pivot:
                     anim.weapon_pivot.rotation_degrees = (
                         0
@@ -37,10 +45,15 @@ class AnimationSystem(esper.Processor):
                             else 180 if state.cardinal_direction == Vector2.UP else -90
                         )
                     )
+
+                # Put it all together
                 target_animation = f"{state.current}_{anim_direction}"
+
+                # Only play if we aren't already playing
                 if anim.animator.get_current_animation() != target_animation:
                     anim.animator.play(target_animation)
 
+                # Check for the finished animation flag when attacking
                 if state.current == State.ATTACK:
                     if state.animation_is_finished:
                         prev: State = state.previous
