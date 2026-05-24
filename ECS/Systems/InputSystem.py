@@ -4,7 +4,7 @@ from py4godot.classes.Node import Vector2
 
 from ..components import (
     ATTACK,
-    DIR_4,
+    FACINGS,
     InputComponent,
     PlayerComponent,
     State,
@@ -70,5 +70,5 @@ class InputSystem(esper.Processor):
                 pass
             else:
                 # raw_angle = move.angle()
-                direction_id: int = int(round((move.angle() / math.tau * len(DIR_4))))
-                state.cardinal_direction = DIR_4[direction_id]
+                direction_id: int = int(round((move.angle() / math.tau * len(FACINGS))))
+                state.cardinal_direction = FACINGS[direction_id]
