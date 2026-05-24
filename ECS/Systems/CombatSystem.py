@@ -1,11 +1,10 @@
 import esper
 from py4godot.classes.Area2D import Area2D
-from py4godot.classes.Engine import Engine
-from py4godot.classes.SceneTree import SceneTree
 from ..components import (
+    ENTITY_ID,
     BodyComponent,
     HitboxComponent,
-    HurtboxComponent,
+    # HurtboxComponent,
     HealthComponent,
     VelocityComponent,
 )
@@ -21,6 +20,8 @@ class CombatSystem(esper.Processor):
         ):
             # Access the node tracking property saved inside the component data
             hitbox_node: Area2D = Area2D.cast(hitbox.node)
+            if not attacker_body.body or attacker_body.body.is_queued_for_deletion():
+                continue
 
             if not hitbox_node or not hitbox_node.is_monitoring():
                 continue
@@ -32,47 +33,43 @@ class CombatSystem(esper.Processor):
                 victim_area_node: Area2D = Area2D.cast(overlapping_areas.get(i))
 
                 # Grab all entities that have a hurtbox component
-                for victim_ent, hurtbox in esper.get_component(HurtboxComponent):
-                    hurtbox_node = Area2D.cast(overlapping_areas.get(i))
+                if victim_area_node.has_meta(ENTITY_ID):
+                    victim_ent = int(str(victim_area_node.get_meta(ENTITY_ID)))
+                    # hurtbox_node = Area2D.cast(overlapping_areas.get(i))
 
-                    # Check if the Area2D nodes match
-                    if (
-                        hurtbox_node.get_instance_id()
-                        == victim_area_node.get_instance_id()
+                    if attacker_ent == victim_ent:
+                        continue
+
+                    # Apply Damage
+                    if victim_health := esper.try_component(
+                        victim_ent, HealthComponent
                     ):
-                        if attacker_ent == victim_ent:
+                        # process health stuff here
+                        if victim_health.current <= 0:
                             continue
+                        victim_health.current -= hitbox.damage
+                        print(
+                            f"Entity #{victim_ent} damaged by #{attacker_ent}! HP: {victim_health.current}/{victim_health.maximum}"
+                        )
 
-                        # Apply Damage
-                        if victim_health := esper.try_component(
-                            victim_ent, HealthComponent
-                        ):
-                            # process health stuff here
-                            victim_health.current -= hitbox.damage
-                            print(
-                                f"Entity #{victim_ent} damaged by #{attacker_ent}! HP: {victim_health.current}/{victim_health.maximum}"
-                            )
+                    # Apply knockback direction vectors
+                    if (
+                        victim_body := esper.try_component(victim_ent, BodyComponent)
+                    ) and (
+                        victim_vel := esper.try_component(victim_ent, VelocityComponent)
+                    ):
+                        if victim_body.body.is_queued_for_deletion():
+                            continue
+                        diff = (
+                            victim_body.body.global_position
+                            - attacker_body.body.global_position
+                        )
+                        dir_vector = diff.normalized()
 
-                        # Apply knockback direction vectors
-                        if (
-                            victim_body := esper.try_component(
-                                victim_ent, BodyComponent
-                            )
-                        ) and (
-                            victim_vel := esper.try_component(
-                                victim_ent, VelocityComponent
-                            )
-                        ):
-                            diff = (
-                                victim_body.body.global_position
-                                - attacker_body.body.global_position
-                            )
-                            dir_vector = diff.normalized()
+                        victim_vel.x = dir_vector.x * hitbox.knockback_force
+                        victim_vel.y = dir_vector.y * hitbox.knockback_force
 
-                            victim_vel.x = dir_vector.x * hitbox.knockback_force
-                            victim_vel.y = dir_vector.y * hitbox.knockback_force
-
-                        hitbox_node.set_deferred("monitoring", False)
+                    hitbox_node.call_deferred("set_monitoring", False)
 
         # # --- ENGINE PROBE TRACKER ---
         # raw_loop = Engine.instance().get_main_loop()

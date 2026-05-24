@@ -9,6 +9,7 @@ from py4godot.classes.Node2D import Node2D
 
 from ECS.components import (
     # BodyComponent,
+    ENTITY_ID,
     HealthComponent,
     HurtboxComponent,
     # VelocityComponent,
@@ -35,3 +36,8 @@ class Plant(Node2D):
             # BodyComponent(self),
             # VelocityComponent(0.0, 0.0)
         )
+
+        self.set_meta(ENTITY_ID, str(self.entity))
+        raw_hurtbox.set_meta(ENTITY_ID, str(self.entity))
+
+        print(f"Stamped Godot C++ Node with absolute Entity ID: #{self.entity}")

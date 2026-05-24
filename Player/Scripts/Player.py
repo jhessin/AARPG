@@ -11,6 +11,7 @@ from py4godot.signals import Callable
 from GeneralNodes.HitBox.HitBox import HitBox
 
 from ECS.components import (
+    ENTITY_ID,
     AnimationComponent,
     BodyComponent,
     HealthComponent,
@@ -29,21 +30,21 @@ class Player(CharacterBody2D):
 
     def __init__(self):
         super().__init__()
-        self._entity = -1
+        self.entity = -1
 
     def _ready(self) -> None:
         self.decelerate_speed = max(1.0, min(self.decelerate_speed, 20.0))
         self.sprite: Sprite2D = self.get_node("Sprite2D")
         self.animator: AnimationPlayer = self.get_node("AnimationPlayer")
         self.audio_player: AudioStreamPlayer2D = self.get_node("Audio/AudioPlayer")
-        self.hit_box: HitBox = self.get_node("HitBox").get_pyscript()
+        self.hit_box: HitBox = self.get_node("Sprite2D/HitBox").get_pyscript()
         sound_path: str = "res://Player/Audio/SwordSwoosh.wav"
 
         attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)
 
         sounds: dict[str, AudioStream] = {ATTACK: attack_sound}
 
-        self._entity = esper.create_entity(
+        self.entity = esper.create_entity(
             HealthComponent(
                 self,
             ),
@@ -56,12 +57,13 @@ class Player(CharacterBody2D):
             AudioComponent(self.audio_player, sounds),
             self.hit_box.component,
         )
+        self.set_meta(ENTITY_ID, str(self.entity))
         self.animator.animation_finished.connect(
             Callable.new2(self, "_on_animation_finished")
         )
 
     def _unhandled_input(self, event: InputEvent) -> None:
-        if input_cmp := esper.try_component(self._entity, InputComponent):
+        if input_cmp := esper.try_component(self.entity, InputComponent):
             input_cmp.queue.append(event.duplicate())
 
     @gdmethod
@@ -69,5 +71,5 @@ class Player(CharacterBody2D):
         anim_name = str(anim_name)
         # Godot passes the name of the finished clip as a parameter
         if anim_name.startswith(ATTACK):
-            if state := esper.try_component(self._entity, StateComponent):
+            if state := esper.try_component(self.entity, StateComponent):
                 state.animation_is_finished = True

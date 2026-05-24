@@ -15,6 +15,7 @@ from py4godot.classes.Area2D import Area2D
 ATTACK = "attack"
 IDLE = "idle"
 WALK = "walk"
+ENTITY_ID = "ecs_entity_id"
 
 
 @dataclass
