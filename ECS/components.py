@@ -87,7 +87,6 @@ class State(Enum):
 class StateComponent:
     current: State = State.IDLE
     previous: State = current
-    time_in_state: float = 0.0
     cardinal_direction: Vector2 = field(default_factory=lambda: Vector2.DOWN)
     animation_is_finished: bool = False
     decelerate_speed: float = 5.0
