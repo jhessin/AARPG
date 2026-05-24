@@ -26,6 +26,16 @@ class AnimationSystem(esper.Processor):
                     if state.cardinal_direction == Vector2.DOWN
                     else "up" if state.cardinal_direction == Vector2.UP else "side"
                 )
+                if anim.weapon_pivot:
+                    anim.weapon_pivot.rotation_degrees = (
+                        0
+                        if state.cardinal_direction == Vector2.DOWN
+                        else (
+                            90
+                            if state.cardinal_direction == Vector2.LEFT
+                            else 180 if state.cardinal_direction == Vector2.UP else -90
+                        )
+                    )
                 target_animation = f"{state.current}_{anim_direction}"
                 if anim.animator.get_current_animation() != target_animation:
                     anim.animator.play(target_animation)

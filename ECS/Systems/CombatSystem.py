@@ -14,7 +14,7 @@ class CombatSystem(esper.Processor):
     def process(self, _delta: float) -> None:
         del _delta
 
-        # Loop through any entities with active attacking weapon components
+        # Loop through any entities with active attacking weapon components this requires a hitbox and a body
         for attacker_ent, (hitbox, attacker_body) in esper.get_components(
             HitboxComponent, BodyComponent
         ):
@@ -29,10 +29,11 @@ class CombatSystem(esper.Processor):
             # Query overlapping vectors natively
             overlapping_areas = hitbox_node.get_overlapping_areas()
 
+            # Loop through each area that was hit.
             for i in range(overlapping_areas.size()):
                 victim_area_node: Area2D = Area2D.cast(overlapping_areas.get(i))
 
-                # Grab all entities that have a hurtbox component
+                # Check for a hurtbox component
                 if victim_area_node.has_meta(ENTITY_ID):
                     victim_ent = int(str(victim_area_node.get_meta(ENTITY_ID)))
                     # hurtbox_node = Area2D.cast(overlapping_areas.get(i))

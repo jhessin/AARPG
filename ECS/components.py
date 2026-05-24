@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
+from typing import Optional
 from py4godot.classes.Node2D import Node2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.AudioStream import AudioStream
@@ -29,6 +30,7 @@ class VelocityComponent:
 class AnimationComponent:
     animator: AnimationPlayer
     sprite: Sprite2D
+    weapon_pivot: Optional[Node2D] = None
 
 
 @dataclass()

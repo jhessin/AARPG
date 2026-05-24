@@ -3,6 +3,7 @@ from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.InputEvent import InputEvent
 from py4godot.classes.AudioStream import AudioStream
 from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
+from py4godot.classes.Node2D import Node2D
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.ResourceLoader import ResourceLoader
@@ -37,7 +38,8 @@ class Player(CharacterBody2D):
         self.sprite: Sprite2D = self.get_node("Sprite2D")
         self.animator: AnimationPlayer = self.get_node("AnimationPlayer")
         self.audio_player: AudioStreamPlayer2D = self.get_node("Audio/AudioPlayer")
-        self.hit_box: HitBox = self.get_node("Sprite2D/HitBox").get_pyscript()
+        self.hit_box: HitBox = self.get_node("WeaponPivot/HitBox").get_pyscript()
+        weapon_pivot: Node2D = self.get_node("WeaponPivot")
         sound_path: str = "res://Player/Audio/SwordSwoosh.wav"
 
         attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)
@@ -50,7 +52,7 @@ class Player(CharacterBody2D):
             ),
             VelocityComponent(),
             IsPlayer(),
-            AnimationComponent(self.animator, self.sprite),
+            AnimationComponent(self.animator, self.sprite, weapon_pivot),
             BodyComponent(self),
             StateComponent(decelerate_speed=self.decelerate_speed),
             InputComponent(),
