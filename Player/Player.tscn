@@ -539,10 +539,6 @@ safe_margin = 0.08
 script = ExtResource("1_q3lat")
 decelerate_speed = 5.0
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1478284068]
-unique_name_in_owner = true
-editor_draw_limits = true
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1472060122]
 shape = SubResource("CircleShape2D_5k2my")
 

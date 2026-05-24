@@ -11,6 +11,7 @@ from py4godot.classes.InputEvent import InputEvent
 from py4godot.classes.Area2D import Area2D
 from py4godot.classes.Camera2D import Camera2D
 from py4godot.classes.CharacterBody2D import CharacterBody2D
+from py4godot.classes.TileMapLayer import TileMapLayer
 
 # Adding constants here
 ATTACK = "attack"
@@ -111,3 +112,8 @@ class HurtboxComponent:
 @dataclass()
 class CameraComponent:
     camera: Camera2D
+    tile_map: TileMapLayer
+
+    # Flags for advanced camera states
+    map_changed: bool = True
+    is_active: bool = True
