@@ -35,11 +35,11 @@ class Player(CharacterBody2D):
 
     def _ready(self) -> None:
         self.decelerate_speed = max(1.0, min(self.decelerate_speed, 20.0))
-        self.sprite: Sprite2D = self.get_node("Sprite2D")
-        self.animator: AnimationPlayer = self.get_node("AnimationPlayer")
-        self.audio_player: AudioStreamPlayer2D = self.get_node("Audio/AudioPlayer")
-        self.hit_box: HitBox = self.get_node("WeaponPivot/HitBox").get_pyscript()
-        weapon_pivot: Node2D = self.get_node("WeaponPivot")
+        self.sprite: Sprite2D = self.get_node("%PlayerSprite")
+        self.animator: AnimationPlayer = self.get_node("%AnimationPlayer")
+        self.audio_player: AudioStreamPlayer2D = self.get_node("%AudioPlayer")
+        self.hit_box: HitBox = self.get_node("%HitBox").get_pyscript()
+        weapon_pivot: Node2D = self.get_node("%WeaponPivot")
         sound_path: str = "res://Player/Audio/SwordSwoosh.wav"
 
         attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)

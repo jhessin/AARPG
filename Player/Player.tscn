@@ -8,6 +8,9 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5k2my"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_8g4oa"]
+radius = 20.0
+
 [sub_resource type="Animation" id="Animation_tok1r"]
 length = 0.001
 
@@ -17,7 +20,7 @@ length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -29,7 +32,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:frame")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -41,7 +44,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D/AttackEffectSprite:position")
+tracks/2/path = NodePath("PlayerSprite/AttackEffectSprite:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -53,7 +56,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/3/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -65,7 +68,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/4/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -81,7 +84,7 @@ length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -93,7 +96,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:frame")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -105,7 +108,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D/AttackEffectSprite:position")
+tracks/2/path = NodePath("PlayerSprite/AttackEffectSprite:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -117,7 +120,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/3/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -129,7 +132,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Sprite2D/AttackEffectSprite:show_behind_parent")
+tracks/4/path = NodePath("PlayerSprite/AttackEffectSprite:show_behind_parent")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -141,7 +144,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/5/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -157,7 +160,7 @@ length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -169,7 +172,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:frame")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -181,7 +184,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D/AttackEffectSprite:position")
+tracks/2/path = NodePath("PlayerSprite/AttackEffectSprite:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -193,7 +196,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/3/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -205,7 +208,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Sprite2D/AttackEffectSprite:show_behind_parent")
+tracks/4/path = NodePath("PlayerSprite/AttackEffectSprite:show_behind_parent")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -217,7 +220,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/5/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -234,7 +237,7 @@ loop_mode = 2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -246,7 +249,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -258,7 +261,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/2/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -275,7 +278,7 @@ loop_mode = 2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -287,7 +290,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -299,7 +302,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/2/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -316,7 +319,7 @@ loop_mode = 2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -328,7 +331,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -340,7 +343,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/2/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -357,7 +360,7 @@ loop_mode = 2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -369,7 +372,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -381,7 +384,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/2/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -398,7 +401,7 @@ loop_mode = 2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -410,7 +413,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -422,7 +425,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/2/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -439,7 +442,7 @@ loop_mode = 2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -451,7 +454,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D/AttackEffectSprite:visible")
+tracks/1/path = NodePath("PlayerSprite/AttackEffectSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -463,7 +466,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("WeaponPivot/HitBox:monitoring")
+tracks/2/path = NodePath("PlayerSprite/WeaponPivot/HitBox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -486,9 +489,6 @@ _data = {
 &"walk_side": SubResource("Animation_vlldt"),
 &"walk_up": SubResource("Animation_s1rgi")
 }
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_8g4oa"]
-radius = 20.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1868610309 groups=["Player"]]
 unique_name_in_owner = false
@@ -539,46 +539,55 @@ safe_margin = 0.08
 script = ExtResource("1_q3lat")
 decelerate_speed = 5.0
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1478284068]
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1472060122]
 shape = SubResource("CircleShape2D_5k2my")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1417869843]
+[node name="PlayerSprite" type="Sprite2D" parent="." unique_id=1417869843]
+unique_name_in_owner = true
 position = Vector2(0, -22)
 texture = ExtResource("2_q3lat")
 hframes = 16
 vframes = 3
+frame = 7
 
-[node name="ShadowSprite" type="Sprite2D" parent="Sprite2D" unique_id=1920064377]
+[node name="ShadowSprite" type="Sprite2D" parent="PlayerSprite" unique_id=1920064377]
 modulate = Color(0, 0, 0, 0.78431374)
 show_behind_parent = true
 position = Vector2(0, 21)
 texture = ExtResource("3_ddoul")
 
-[node name="AttackEffectSprite" type="Sprite2D" parent="Sprite2D" unique_id=1561317742]
+[node name="AttackEffectSprite" type="Sprite2D" parent="PlayerSprite" unique_id=1561317742]
 visible = false
 position = Vector2(0, -10)
 texture = ExtResource("3_tok1r")
 hframes = 12
 frame = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1919859737]
-libraries/ = SubResource("AnimationLibrary_tok1r")
+[node name="WeaponPivot" type="Node2D" parent="PlayerSprite" unique_id=164027066]
+unique_name_in_owner = true
+position = Vector2(0, 2)
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1478284068]
-
-[node name="Audio" type="Node2D" parent="." unique_id=1971199705]
-
-[node name="AudioPlayer" type="AudioStreamPlayer2D" parent="Audio" unique_id=393715933]
-max_polyphony = 4
-
-[node name="WeaponPivot" type="Node2D" parent="." unique_id=164027066]
-position = Vector2(0, -20)
-
-[node name="HitBox" parent="WeaponPivot" unique_id=1746663931 instance=ExtResource("5_8g4oa")]
+[node name="HitBox" parent="PlayerSprite/WeaponPivot" unique_id=1746663931 instance=ExtResource("5_8g4oa")]
+unique_name_in_owner = true
 position = Vector2(0, 20)
 collision_mask = 256
 monitoring = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponPivot/HitBox" unique_id=1251849498]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerSprite/WeaponPivot/HitBox" unique_id=1251849498]
 shape = SubResource("CircleShape2D_8g4oa")
 debug_color = Color(0.87659526, 0.27467412, 0.531625, 0.41960785)
+
+[node name="Audio" type="Node2D" parent="." unique_id=1971199705]
+
+[node name="AudioPlayer" type="AudioStreamPlayer2D" parent="Audio" unique_id=393715933]
+unique_name_in_owner = true
+max_polyphony = 4
+
+[node name="Animation" type="Node" parent="." unique_id=1498866493]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=1919859737]
+unique_name_in_owner = true
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_tok1r")
