@@ -25,8 +25,11 @@ from ECS.components import (
 
 @gdclass
 class Player(CharacterBody2D):
-    _entity: int
     decelerate_speed: float = gdproperty(float, 5.0)
+
+    def __init__(self):
+        super().__init__()
+        self._entity = -1
 
     def _ready(self) -> None:
         self.decelerate_speed = max(1.0, min(self.decelerate_speed, 20.0))
