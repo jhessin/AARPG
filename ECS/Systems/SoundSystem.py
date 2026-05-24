@@ -17,10 +17,10 @@ class SoundSystem(esper.Processor):
                         audio.player.pitch_scale = uniform(0.9, 1.1)
                         audio.player.play()
                         audio.current_key = ATTACK
-            else:
+            elif audio.current_key == ATTACK:
                 # if the player is no longer attacking but the audio tag is active
-                if audio.current_key == ATTACK:
-                    audio.player.stop()
-                    # This crashes py4godot
-                    # audio.player.stream = None
-                    audio.current_key = ""
+                audio.current_key = ""
+                # with one-shot sounds this is unnecessary.
+                # audio.player.stop()
+                # This crashes py4godot
+                # audio.player.stream = None
