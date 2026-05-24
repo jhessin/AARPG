@@ -19,6 +19,9 @@ class AnimationSystem(esper.Processor):
                 self.state: StateComponent = state
                 self.anim: AnimationComponent = anim
                 anim.sprite.flip_h = state.cardinal_direction == Vector2.LEFT
+                anim.sprite.get_node("%EffectAnchor").scale.x = (
+                    -1 if state.cardinal_direction == Vector2.LEFT else 1
+                )
                 anim_direction = (
                     "down"
                     if state.cardinal_direction == Vector2.DOWN

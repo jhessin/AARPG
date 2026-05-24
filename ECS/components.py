@@ -17,6 +17,12 @@ ATTACK = "attack"
 IDLE = "idle"
 WALK = "walk"
 ENTITY_ID = "ecs_entity_id"
+DIR_4 = [
+    Vector2.RIGHT,
+    Vector2.DOWN,
+    Vector2.LEFT,
+    Vector2.UP,
+]
 
 
 @dataclass

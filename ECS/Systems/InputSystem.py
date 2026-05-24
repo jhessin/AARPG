@@ -4,12 +4,14 @@ from py4godot.classes.Node import Vector2
 
 from ..components import (
     ATTACK,
+    DIR_4,
     InputComponent,
     IsPlayer,
     PlayerState,
     StateComponent,
     VelocityComponent,
 )
+import math
 
 
 class InputSystem(esper.Processor):
@@ -66,7 +68,7 @@ class InputSystem(esper.Processor):
             # update the facing of the player
             if move.length() == 0.0:
                 pass
-            elif move.y == 0:
-                state.cardinal_direction = Vector2.LEFT if move.x < 0 else Vector2.RIGHT
-            elif move.x == 0:
-                state.cardinal_direction = Vector2.UP if move.y < 0 else Vector2.DOWN
+            else:
+                # raw_angle = move.angle()
+                direction_id: int = int(round((move.angle() / math.tau * len(DIR_4))))
+                state.cardinal_direction = DIR_4[direction_id]
