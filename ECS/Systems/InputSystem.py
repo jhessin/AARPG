@@ -6,8 +6,8 @@ from ..components import (
     ATTACK,
     DIR_4,
     InputComponent,
-    IsPlayer,
-    PlayerState,
+    PlayerComponent,
+    State,
     StateComponent,
     VelocityComponent,
 )
@@ -18,7 +18,7 @@ class InputSystem(esper.Processor):
     def process(self, _delta: float) -> None:
         input_manager = Input.instance()
         for _, (vel, state, input_q, *_) in esper.get_components(
-            VelocityComponent, StateComponent, InputComponent, IsPlayer
+            VelocityComponent, StateComponent, InputComponent, PlayerComponent
         ):
             state.time_in_state += _delta
 
@@ -29,7 +29,7 @@ class InputSystem(esper.Processor):
             ).normalized()
 
             # Check if I'm already attacking
-            if state.current == PlayerState.ATTACK:
+            if state.current == State.ATTACK:
                 move.x = move.y = 0.0
                 input_q.queue.clear()  # don't queue any more attacks
                 continue  # skip directional evaluations until the attack finishes
@@ -44,7 +44,7 @@ class InputSystem(esper.Processor):
 
             if has_attacked:
                 state.previous = state.current
-                state.current = PlayerState.ATTACK
+                state.current = State.ATTACK
                 state.time_in_state = 0.0
                 continue  # Instantly switch states
 
@@ -55,14 +55,14 @@ class InputSystem(esper.Processor):
 
             # Update the player state
             if move.length() > 0.0:
-                if state.current == PlayerState.IDLE:
+                if state.current == State.IDLE:
                     state.previous = state.current
-                    state.current = PlayerState.WALK
+                    state.current = State.WALK
                     state.time_in_state = 0.0
             else:
-                if state.current == PlayerState.WALK:
+                if state.current == State.WALK:
                     state.previous = state.current
-                    state.current = PlayerState.IDLE
+                    state.current = State.IDLE
                     state.time_in_state = 0.0
 
             # update the facing of the player

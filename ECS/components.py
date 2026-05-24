@@ -9,8 +9,8 @@ from py4godot.classes.Node import Vector2
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.InputEvent import InputEvent
 from py4godot.classes.Area2D import Area2D
-
-# from py4godot.classes.CharacterBody2D import CharacterBody2D
+from py4godot.classes.Camera2D import Camera2D
+from py4godot.classes.CharacterBody2D import CharacterBody2D
 
 # Adding constants here
 ATTACK = "attack"
@@ -63,29 +63,30 @@ class HealthComponent:
         self.current = maximum
 
 
-class IsPlayer:
-    pass
+@dataclass()
+class PlayerComponent:
+    model: CharacterBody2D
 
 
-class PlayerState(Enum):
+class State(Enum):
     IDLE = auto()
     WALK = auto()
     ATTACK = auto()
 
     def __str__(self) -> str:
         match self:
-            case PlayerState.IDLE:
+            case State.IDLE:
                 return IDLE
-            case PlayerState.WALK:
+            case State.WALK:
                 return WALK
-            case PlayerState.ATTACK:
+            case State.ATTACK:
                 return ATTACK
 
 
 @dataclass()
 class StateComponent:
-    current: PlayerState = PlayerState.IDLE
-    previous: PlayerState = current
+    current: State = State.IDLE
+    previous: State = current
     time_in_state: float = 0.0
     cardinal_direction: Vector2 = field(default_factory=lambda: Vector2.DOWN)
     animation_is_finished: bool = False
@@ -106,3 +107,8 @@ class HitboxComponent:
 @dataclass()
 class HurtboxComponent:
     node: Area2D = field(default_factory=Area2D.new)
+
+
+@dataclass()
+class CameraComponent:
+    camera: Camera2D

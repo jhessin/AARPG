@@ -1,7 +1,7 @@
 import esper
 from py4godot.classes.core import Vector2
 from ..components import (
-    PlayerState,
+    State,
     StateComponent,
     AnimationComponent,
 )
@@ -41,9 +41,9 @@ class AnimationSystem(esper.Processor):
                 if anim.animator.get_current_animation() != target_animation:
                     anim.animator.play(target_animation)
 
-                if state.current == PlayerState.ATTACK:
+                if state.current == State.ATTACK:
                     if state.animation_is_finished:
-                        prev: PlayerState = state.previous
+                        prev: State = state.previous
                         state.previous = state.current
                         state.current = prev
                         state.animation_is_finished = False

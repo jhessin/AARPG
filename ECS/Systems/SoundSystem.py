@@ -1,7 +1,7 @@
 import esper
 from random import uniform
 
-from ECS.components import AudioComponent, PlayerState, StateComponent, ATTACK
+from ECS.components import AudioComponent, State, StateComponent, ATTACK
 
 
 class SoundSystem(esper.Processor):
@@ -9,7 +9,7 @@ class SoundSystem(esper.Processor):
         del _delta
         for _, (state, audio) in esper.get_components(StateComponent, AudioComponent):
 
-            if state.current == PlayerState.ATTACK:
+            if state.current == State.ATTACK:
                 if audio.current_key != ATTACK:
                     if attack_sound := audio.sounds.get(ATTACK):
                         if audio.player.get_stream() != attack_sound:
