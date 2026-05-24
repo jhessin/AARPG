@@ -64,6 +64,8 @@ class Player(CharacterBody2D):
             Callable.new2(self, "_on_animation_finished")
         )
 
+        self.add_to_group("Player")
+
     def _unhandled_input(self, event: InputEvent) -> None:
         if input_cmp := esper.try_component(self.entity, InputComponent):
             input_cmp.queue.append(event.duplicate())

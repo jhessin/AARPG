@@ -40,4 +40,4 @@ class Plant(Node2D):
         self.set_meta(ENTITY_ID, str(self.entity))
         raw_hurtbox.set_meta(ENTITY_ID, str(self.entity))
 
-        print(f"Stamped Godot C++ Node with absolute Entity ID: #{self.entity}")
+        self.add_to_group("Enemy")
