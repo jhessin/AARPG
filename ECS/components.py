@@ -5,7 +5,7 @@ from py4godot.classes.Node2D import Node2D
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.AudioStream import AudioStream
 from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
-from py4godot.classes.Node import Vector2
+from py4godot.classes.Node import Node, Vector2
 from py4godot.classes.Sprite2D import Sprite2D
 from py4godot.classes.InputEvent import InputEvent
 from py4godot.classes.Area2D import Area2D
@@ -53,7 +53,7 @@ class BodyComponent:
 
 @dataclass
 class HealthComponent:
-    parent: Node2D
+    parent: Node
     maximum: float
     current: float
 
