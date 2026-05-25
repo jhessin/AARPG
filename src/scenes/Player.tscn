@@ -580,7 +580,7 @@ position = Vector2(0, 2)
 unique_name_in_owner = true
 position = Vector2(0, 20)
 collision_mask = 256
-knockback_force = 5.0
+knockback_force = 50.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerSprite/WeaponPivot/HitBox" unique_id=1251849498]
 shape = SubResource("CircleShape2D_8g4oa")

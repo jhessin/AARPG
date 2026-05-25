@@ -63,7 +63,7 @@ class VelocityComponent:
 
     @direction.setter
     def direction(self, value: Vector2) -> None:
-        self._direction = value.normalized()
+        self._direction = value.normalized() if value.length() > 0.0 else Vector2.ZERO
 
 
 @dataclass
@@ -215,8 +215,9 @@ class StateComponent:
         self._decelerate_speed = clamp(value, 1.0, 20.0)
 
 
+@dataclass
 class InputComponent:
-    queue: list[InputEvent] = []
+    queue: list[InputEvent] = field(default_factory=list)
 
 
 class HitboxComponent:

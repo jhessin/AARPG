@@ -65,15 +65,28 @@ class CombatSystem(esper.Processor):
                         if camera_list := esper.get_component(CameraComponent):
                             camera_ent, _ = camera_list[0]
 
-                            esper.add_component(
-                                camera_ent,
-                                CameraShakeComponent(
+                            if shake := esper.try_component(
+                                camera_ent, CameraShakeComponent
+                            ):
+                                shake.intensity += avg(knockback_applied, damage_taken)
+                                shake.duration = max(
+                                    shake.duration,
                                     clamp(
                                         knockback_applied, 0.2, hitbox.attack_duration
                                     ),
-                                    avg(knockback_applied, damage_taken),
-                                ),
-                            )
+                                )
+                            else:
+                                esper.add_component(
+                                    camera_ent,
+                                    CameraShakeComponent(
+                                        clamp(
+                                            knockback_applied,
+                                            0.2,
+                                            hitbox.attack_duration,
+                                        ),
+                                        avg(knockback_applied, damage_taken),
+                                    ),
+                                )
 
                     # Apply knockback direction if the victim has a body and
                     # VelocityComponent
@@ -87,9 +100,10 @@ class CombatSystem(esper.Processor):
                             - attacker.body.global_position
                         )
                         if victim_body.body.is_queued_for_deletion():
-                            return
+                            continue
 
-                        victim_vel.knockback = diff * hitbox.knockback_force
+                        if diff.length() > 0.001:
+                            victim_vel.knockback = diff.normalized() * knockback_applied
 
                     # Disable the hitbox node until the next attack
                     hitbox_node.call_deferred("set_monitoring", False)

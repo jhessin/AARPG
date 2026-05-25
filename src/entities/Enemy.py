@@ -38,7 +38,7 @@ class Enemy(CharacterBody2D):
         hitbox.add_child(new_shape())
 
         self.entity = esper.create_entity(
-            HitboxComponent(node=hitbox),
+            HitboxComponent(hitbox),
             HealthComponent(self, 50),
             StateComponent(),
             AnimationComponent(animator, sprite),
