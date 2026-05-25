@@ -60,16 +60,30 @@ class BodyComponent:
     body: Node2D
 
 
-@dataclass
 class HealthComponent:
     parent: Node
-    maximum: float
-    current: float
 
     def __init__(self, parent: Node2D, maximum: float = 100.0) -> None:
         self.parent = parent
-        self.maximum = maximum
-        self.current = maximum
+        maximum = max(1.0, maximum)
+        self._maximum: float = maximum
+        self._current: float = maximum
+
+    @property
+    def current(self) -> float:
+        return self._current
+
+    @current.setter
+    def current(self, value: float) -> None:
+        self._current = clamp(value, 0.0, self._maximum)
+
+    @property
+    def maximum(self) -> float:
+        return self._maximum
+
+    @maximum.setter
+    def maximum(self, value: float) -> None:
+        self._maximum = max(value, 1.0)
 
 
 @dataclass()
@@ -92,26 +106,89 @@ class State(Enum):
                 return ATTACK
 
 
-@dataclass()
 class StateComponent:
-    current: State = State.IDLE
-    previous: State = current
-    cardinal_direction: Vector2 = field(default_factory=lambda: Vector2.DOWN)
-    animation_is_finished: bool = False
-    decelerate_speed: float = 5.0
+
+    def __init__(self, decelerate_speed: float = 5.0) -> None:
+        decelerate_speed = max(1.0, min(decelerate_speed, 20.0))
+        self.current: State = State.IDLE
+        self.previous: State = self.current
+        self.animation_is_finished: bool = False
+        self._cardinal_direction: Vector2 = Vector2.DOWN
+        self._decelerate_speed: float = decelerate_speed
+
+    @property
+    def cardinal_direction(self) -> Vector2:
+        return self._cardinal_direction
+
+    @cardinal_direction.setter
+    def cardinal_direction(self, value: Vector2) -> None:
+        self._cardinal_direction = (
+            value if value in FACINGS else self._cardinal_direction
+        )
+
+    @property
+    def decelerate_speed(self) -> float:
+        return self._decelerate_speed
+
+    @decelerate_speed.setter
+    def decelerate_speed(self, value: float) -> None:
+        self._decelerate_speed = clamp(value, 1.0, 20.0)
 
 
 class InputComponent:
     queue: list[InputEvent] = []
 
 
-@dataclass()
 class HitboxComponent:
     node: Area2D = field(default_factory=Area2D.new)
-    min_damage: float = 10.0
-    max_damage: float = 15.0
-    knockback_force: float = 300.0
-    attack_duration: float = 0.0
+
+    def __init__(
+        self,
+        node: Area2D,
+        min_damage: float = 10.0,
+        max_damage: float = 15.0,
+        knockback_force: float = 300.0,
+    ) -> None:
+        self.node = node
+        min_damage = max(min_damage, 1.0)
+        max_damage = max(min_damage, max_damage)
+        knockback_force = clamp(knockback_force, 0.0, 500.0)
+        self._min_damage: float = min_damage
+        self._max_damage: float = max_damage
+        self._knockback_force: float = knockback_force
+        self._attack_duration: float = 0.0
+
+    @property
+    def min_damage(self) -> float:
+        return self._min_damage
+
+    @min_damage.setter
+    def min_damage(self, value: float) -> None:
+        self._min_damage = max(value, 1.0)
+
+    @property
+    def max_damage(self) -> float:
+        return self._max_damage
+
+    @max_damage.setter
+    def max_damage(self, value: float) -> None:
+        self._max_damage = max(self._min_damage, value)
+
+    @property
+    def knockback_force(self) -> float:
+        return self._knockback_force
+
+    @knockback_force.setter
+    def knockback_force(self, value: float) -> None:
+        self._knockback_force = clamp(value, 0.0, 500.0)
+
+    @property
+    def attack_duration(self) -> float:
+        return self._attack_duration
+
+    @attack_duration.setter
+    def attack_duration(self, value: float) -> None:
+        self._attack_duration = max(0.0, value)
 
 
 @dataclass()
