@@ -22,7 +22,9 @@ class AnimationSystem(esper.Processor):
 
                 # similarly scale the EffectAnchor to flip the effects if there
                 # is one
-                if effect_anchor := anim.sprite.get_node("%EffectAnchor"):
+                if anim.sprite.has_node("%EffectAnchor") and (
+                    effect_anchor := anim.sprite.get_node("%EffectAnchor")
+                ):
                     effect_anchor.scale.x = (
                         -1 if state.cardinal_direction == Vector2.LEFT else 1
                     )

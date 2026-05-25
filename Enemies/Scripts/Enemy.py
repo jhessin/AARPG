@@ -23,25 +23,21 @@ class Enemy(CharacterBody2D):
     def _ready(self) -> None:
         animator: AnimationPlayer = self.get_node("%Animator")
         sprite: Sprite2D = self.get_node("%Sprite")
-        collider: CollisionShape2D = CollisionShape2D.cast(self.get_node("%Collider"))
 
-        def new_shape(target_area: Area2D) -> CollisionShape2D:
-            shape: CollisionShape2D = CollisionShape2D.new()
-            shape.set_shape(collider.get_shape())
-
-            shape.position = target_area.position
-            return shape
+        def new_shape() -> CollisionShape2D:
+            collider: CollisionShape2D = CollisionShape2D.cast(
+                self.get_node("%Collider")
+            )
+            return collider.duplicate()
 
         hurtbox: Area2D = Area2D.cast(self.get_node("%HurtBox"))
         hitbox: Area2D = Area2D.cast(self.get_node("%HitBox"))
 
-        # hurtbox.add_child(new_shape(hurtbox))
-        # hitbox.add_child(new_shape(hitbox))
+        hurtbox.add_child(new_shape())
+        hitbox.add_child(new_shape())
 
-        # ===
-        # ===
         self.entity = esper.create_entity(
-            # HitboxComponent(hitbox),
+            HitboxComponent(hitbox),
             StateComponent(),
             AnimationComponent(animator, sprite),
             VelocityComponent(speed=50),
@@ -51,7 +47,7 @@ class Enemy(CharacterBody2D):
 
         self.set_meta(ENTITY_ID, str(self.entity))
         sprite.set_meta(ENTITY_ID, str(self.entity))
-        # hitbox.set_meta(ENTITY_ID, str(self.entity))
-        # hurtbox.set_meta(ENTITY_ID, str(self.entity))
+        hitbox.set_meta(ENTITY_ID, str(self.entity))
+        hurtbox.set_meta(ENTITY_ID, str(self.entity))
 
         self.add_to_group("Enemy")
