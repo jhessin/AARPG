@@ -3,10 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://clocs4j1wq01a" path="res://Enemies/Slime/Slime.png" id="1_hsbk2"]
 [ext_resource type="Script" path="res://Enemies/Scripts/Enemy.py" id="1_wyclx"]
 [ext_resource type="Texture2D" uid="uid://03kn44nklv17" path="res://Player/Sprites/Shadow.png" id="2_0ae7n"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0ae7n"]
-radius = 5.0
-height = 20.0
+[ext_resource type="Shape2D" path="res://Enemies/Slime/slime_capsule_collider.tres" id="4_2osmb"]
+[ext_resource type="PackedScene" uid="uid://dcypa038yepnq" path="res://GeneralNodes/HurtBox/HurtBox.tscn" id="4_qsqqn"]
+[ext_resource type="PackedScene" uid="uid://ci6adrkqos47e" path="res://GeneralNodes/HitBox/HitBox.tscn" id="5_2osmb"]
 
 [sub_resource type="Animation" id="Animation_wyclx"]
 length = 0.001
@@ -279,12 +278,19 @@ texture = ExtResource("1_hsbk2")
 hframes = 16
 vframes = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1670552808]
-position = Vector2(0, -1)
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_0ae7n")
-
 [node name="Animator" type="AnimationPlayer" parent="." unique_id=2140699527]
 unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_wyclx")
 autoplay = &"idle_down"
+
+[node name="Collider" type="CollisionShape2D" parent="." unique_id=1392390303]
+unique_name_in_owner = true
+position = Vector2(0, -1)
+rotation = 1.5707964
+shape = ExtResource("4_2osmb")
+
+[node name="HitBox" parent="." unique_id=1746663931 instance=ExtResource("5_2osmb")]
+unique_name_in_owner = true
+
+[node name="HurtBox" parent="." unique_id=1818104340 instance=ExtResource("4_qsqqn")]
+unique_name_in_owner = true
