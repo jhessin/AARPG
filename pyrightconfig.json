@@ -1,4 +1,6 @@
 {
+  "reportUnusedVariable": "warning",
+  "reportMissingImports": false,
   "pythonPath": "addons/py4godot/cpython-3.14.3-windows64/python/python.exe",
   "extraPaths": [
     "addons/py4godot"
