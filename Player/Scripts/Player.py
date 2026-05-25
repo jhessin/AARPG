@@ -34,7 +34,6 @@ class Player(CharacterBody2D):
         self.entity = -1
 
     def _ready(self) -> None:
-        self.decelerate_speed = max(1.0, min(self.decelerate_speed, 20.0))
         sprite: Sprite2D = self.get_node("%PlayerSprite")
         animator: AnimationPlayer = self.get_node("%AnimationPlayer")
         self.audio_player: AudioStreamPlayer2D = self.get_node("%AudioPlayer")
