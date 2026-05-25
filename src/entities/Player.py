@@ -1,4 +1,5 @@
 import esper
+from py4godot.classes.Area2D import Area2D
 from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.InputEvent import InputEvent
 from py4godot.classes.AudioStream import AudioStream
@@ -39,7 +40,7 @@ class Player(CharacterBody2D):
         self.audio_player: AudioStreamPlayer2D = self.get_node("%AudioPlayer")
         hit_box: HitBox = self.get_node("%HitBox").get_pyscript()
         weapon_pivot: Node2D = self.get_node("%WeaponPivot")
-        sound_path: str = "res://Player/Audio/SwordSwoosh.wav"
+        sound_path: str = "res://src/assets/Audio/SwordSwoosh.wav"
 
         attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)
 
@@ -58,7 +59,12 @@ class Player(CharacterBody2D):
             AudioComponent(self.audio_player, sounds),
             hit_box.component,
         )
+
+        # Stamp entity ID
         self.set_meta(ENTITY_ID, str(self.entity))
+        hit_box.set_meta(ENTITY_ID, str(self.entity))
+        self.get_node("%HurtBox").set_meta(ENTITY_ID, str(self.entity))
+
         animator.animation_finished.connect(
             Callable.new2(self, "_on_animation_finished")
         )

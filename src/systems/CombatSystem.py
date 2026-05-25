@@ -31,8 +31,6 @@ class CombatSystem(esper.Processor):
             if not hitbox_node or not hitbox_node.is_monitoring():
                 continue
 
-            hitbox_node.force_update_transform()
-
             # Query overlapping vectors natively
             overlapping_areas: Area2DTypedArray = hitbox_node.get_overlapping_areas()
 
@@ -56,6 +54,12 @@ class CombatSystem(esper.Processor):
                     ):
                         # process health stuff here
                         victim_health.current -= damage_taken
+                        print(
+                            f"Attacker #{attacker_ent} is hitting #{victim_ent} for {damage_taken}"
+                        )
+                        print(
+                            f"Entity #{victim_ent} HP: {victim_health.current}/{victim_health.maximum}"
+                        )
 
                         # Shake the camera here
                         if camera_list := esper.get_component(CameraComponent):
@@ -85,7 +89,7 @@ class CombatSystem(esper.Processor):
                         if victim_body.body.is_queued_for_deletion():
                             return
 
-                        victim_vel.knockback_force = diff * hitbox.knockback_force
+                        victim_vel.knockback = diff * hitbox.knockback_force
 
                     # Disable the hitbox node until the next attack
                     hitbox_node.call_deferred("set_monitoring", False)

@@ -42,14 +42,12 @@ class VelocityComponent:
         speed = clamp(speed, 0.0, MAX_ENGINE_SPEED)
         self._speed: float = speed
         self._direction: Vector2 = Vector2.new3(x, y)
-        self.knockback_force: Vector2 = Vector2.ZERO
+        self.knockback: Vector2 = Vector2.ZERO
 
     @property
     def total_vel(self) -> Vector2:
-        if self.knockback_force.length() > 1.0:
-            return (self._direction * self.knockback_force) * self._speed
-        else:
-            return self.direction * self.speed
+        base = self._direction * self._speed
+        return base + self.knockback
 
     @property
     def speed(self) -> float:
@@ -111,6 +109,7 @@ class HealthComponent:
     @maximum.setter
     def maximum(self, value: float) -> None:
         self._maximum = max(value, 1.0)
+        self._current = clamp(self._current, 0.0, self._maximum)
 
 
 @dataclass()
@@ -202,7 +201,9 @@ class StateComponent:
 
     @cardinal_direction.setter
     def cardinal_direction(self, value: Vector2) -> None:
-        direction_id: int = int(round((value.angle() / math.tau * len(FACINGS))))
+        direction_id: int = int(round((value.angle() / math.tau * len(FACINGS)))) % len(
+            FACINGS
+        )
         self._cardinal_direction = FACINGS[direction_id]
 
     @property

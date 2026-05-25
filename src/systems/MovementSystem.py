@@ -37,4 +37,5 @@ class MovementSystem(esper.Processor):
 
             # apply friction to knockback effect afterward
             FRICTION_COEFFICIENT = 10.0
-            vel.knockback_force -= vel.knockback_force * FRICTION_COEFFICIENT * delta
+            vel.knockback *= max(0.0, 1.0 - FRICTION_COEFFICIENT * delta)
+
