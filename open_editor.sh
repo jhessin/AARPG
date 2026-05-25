@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-nvim --listen 127.0.0.1:55432
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+cd "$SCRIPT_DIR" && nvim --listen 127.0.0.1:55432
