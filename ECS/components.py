@@ -132,9 +132,26 @@ class PlayerComponent:
     model: CharacterBody2D
 
 
-@dataclass
 class EnemyComponent:
-    model: CharacterBody2D
+
+    def __init__(
+        self,
+        model: CharacterBody2D,
+        attack_range: float = 1.0,
+        has_attack: bool = False,
+    ) -> None:
+        attack_range = clamp(attack_range, 1.0, 1000.0)
+        self.model: CharacterBody2D = model
+        self._attack_range: float = attack_range
+        self.has_attack: bool = has_attack
+
+    @property
+    def attack_range(self) -> float:
+        return self._attack_range
+
+    @attack_range.setter
+    def attack_range(self, value: float) -> None:
+        self._attack_range = clamp(value, 1.0, 1000.0)
 
 
 class State(Enum):
@@ -154,7 +171,10 @@ class State(Enum):
 
 class StateComponent:
 
-    def __init__(self, decelerate_speed: float = 5.0) -> None:
+    def __init__(
+        self,
+        decelerate_speed: float = 5.0,
+    ) -> None:
         decelerate_speed = max(1.0, min(decelerate_speed, 20.0))
         self._current: State = State.IDLE
         self._previous: State = self._current

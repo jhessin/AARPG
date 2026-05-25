@@ -12,6 +12,7 @@ from ECS.components import (
     AnimationComponent,
     BodyComponent,
     EnemyComponent,
+    StateComponent,
     VelocityComponent,
 )
 
@@ -24,10 +25,11 @@ class Enemy(CharacterBody2D):
         sprite: Sprite2D = self.get_node("%Sprite")
 
         self.entity = esper.create_entity(
+            StateComponent(),
             AnimationComponent(animator, sprite),
-            VelocityComponent(speed=100),
+            VelocityComponent(speed=50),
             BodyComponent(self),
-            EnemyComponent(self),
+            EnemyComponent(self, 10.0),
         )
 
         self.set_meta(ENTITY_ID, str(self.entity))
