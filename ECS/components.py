@@ -18,6 +18,7 @@ ATTACK = "attack"
 IDLE = "idle"
 WALK = "walk"
 ENTITY_ID = "ecs_entity_id"
+MAX_ENGINE_SPEED = 1200.0
 FACINGS = [
     Vector2.RIGHT,
     Vector2.DOWN,
@@ -34,11 +35,46 @@ def avg(*args: float) -> float:
     return sum(args) / len(args)
 
 
-@dataclass
 class VelocityComponent:
-    speed: float = 100.0
-    x: float = 0.0
-    y: float = 0.0
+
+    def __init__(self, speed: float = 100.0, x: float = 0.0, y: float = 0.0) -> None:
+        speed = clamp(speed, 0.0, MAX_ENGINE_SPEED)
+        self._speed: float = speed
+        self._direction: Vector2 = Vector2.new3(x, y)
+
+    @property
+    def speed(self) -> float:
+        return self._speed
+
+    @speed.setter
+    def speed(self, value: float) -> None:
+        self._speed = clamp(value, 0.0, MAX_ENGINE_SPEED)
+
+    @property
+    def direction(self) -> Vector2:
+        return self._direction
+
+    @property
+    def x(self) -> float:
+        return self._direction.x
+
+    @x.setter
+    def x(self, value: float) -> None:
+        self._direction = Vector2.new3(
+            value,
+            self._direction.y,
+        )
+
+    @property
+    def y(self) -> float:
+        return self._direction.y
+
+    @y.setter
+    def y(self, value: float) -> None:
+        self._direction = Vector2.new3(
+            self._direction.x,
+            value,
+        )
 
 
 @dataclass
@@ -201,8 +237,35 @@ class CameraComponent:
     is_active: bool = True
 
 
-@dataclass()
 class CameraShakeComponent:
-    duration: float = 0.2
-    intensity: float = 8.0
-    elapsed_time: float = 0.0
+
+    def __init__(self, duration: float = 0.2, intensity: float = 8.0) -> None:
+        duration = max(duration, 0.1)
+        intensity = max(intensity, 0.0)
+        self._duration: float = duration
+        self._intensity: float = intensity
+        self._elapsed_time: float = 0.0
+
+    @property
+    def duration(self) -> float:
+        return self._duration
+
+    @duration.setter
+    def duration(self, value: float) -> None:
+        self._duration = max(value, 0.1)
+
+    @property
+    def intensity(self) -> float:
+        return self._intensity
+
+    @intensity.setter
+    def intensity(self, value: float) -> None:
+        self._intensity = max(value, 0.0)
+
+    @property
+    def elapsed_time(self) -> float:
+        return self._elapsed_time
+
+    @elapsed_time.setter
+    def elapsed_time(self, value: float):
+        self._elapsed_time = value if value > self._elapsed_time else 0.0
