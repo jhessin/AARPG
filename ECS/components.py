@@ -127,6 +127,11 @@ class PlayerComponent:
     model: CharacterBody2D
 
 
+@dataclass
+class EnemyComponent:
+    model: CharacterBody2D
+
+
 class State(Enum):
     IDLE = auto()
     WALK = auto()
@@ -146,11 +151,34 @@ class StateComponent:
 
     def __init__(self, decelerate_speed: float = 5.0) -> None:
         decelerate_speed = max(1.0, min(decelerate_speed, 20.0))
-        self.current: State = State.IDLE
-        self.previous: State = self.current
-        self.animation_is_finished: bool = False
+        self._current: State = State.IDLE
+        self._previous: State = self._current
+        self._animation_is_finished: bool = False
         self._cardinal_direction: Vector2 = Vector2.DOWN
         self._decelerate_speed: float = decelerate_speed
+        self._time_in_state: float = 0.0
+
+    @property
+    def current(self) -> State:
+        return self._current
+
+    @current.setter
+    def current(self, value: State) -> None:
+        if value == self._current:
+            return
+        self._previous = self._current
+        self._current = value
+        self._time_in_state = 0.0
+
+    @property
+    def time_in_state(self) -> float:
+        return self._time_in_state
+
+    @time_in_state.setter
+    def time_in_state(self, value: float) -> None:
+        self._time_in_state = (
+            value if value > self._time_in_state else self._time_in_state
+        )
 
     @property
     def cardinal_direction(self) -> Vector2:
