@@ -62,7 +62,6 @@ class InputSystem(esper.Processor):
                 unhandled.queue.clear()
 
                 if attack_intent:
-                    state.previous = state.current
                     state.current = State.ATTACK
                     # Do not process any more until the other systems handle the attack.
                     return
@@ -77,10 +76,8 @@ class InputSystem(esper.Processor):
 
                 if input_vector.length() > 0.0:
                     if state.current == State.IDLE:
-                        state.previous = state.current
                         state.current = State.WALK
                 elif state.current == State.WALK:
-                    state.previous = state.current
                     state.current = State.IDLE
 
                 # Update the player's cardinal_direction

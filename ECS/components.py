@@ -153,10 +153,15 @@ class StateComponent:
         decelerate_speed = max(1.0, min(decelerate_speed, 20.0))
         self._current: State = State.IDLE
         self._previous: State = self._current
-        self._animation_is_finished: bool = False
         self._cardinal_direction: Vector2 = Vector2.DOWN
         self._decelerate_speed: float = decelerate_speed
         self._time_in_state: float = 0.0
+
+        self.animation_is_finished: bool = False
+
+    @property
+    def previous(self) -> State:
+        return self._previous
 
     @property
     def current(self) -> State:

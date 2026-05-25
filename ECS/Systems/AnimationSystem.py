@@ -64,6 +64,5 @@ class AnimationSystem(esper.Processor):
                 if state.current == State.ATTACK:
                     if state.animation_is_finished:
                         prev: State = state.previous
-                        state.previous = state.current
                         state.current = prev
                         state.animation_is_finished = False

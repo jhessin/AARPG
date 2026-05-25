@@ -1,5 +1,4 @@
 import esper
-import math
 from random import uniform
 from py4godot.classes.Area2D import Area2D
 from py4godot.classes.Area2DTypedArray import Area2DTypedArray
