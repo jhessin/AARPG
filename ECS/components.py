@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+import math
 from enum import Enum, auto
 from typing import Optional
 from py4godot.classes.Node2D import Node2D
@@ -53,6 +54,10 @@ class VelocityComponent:
     @property
     def direction(self) -> Vector2:
         return self._direction
+
+    @direction.setter
+    def direction(self, value: Vector2) -> None:
+        self._direction = value
 
     @property
     def x(self) -> float:
@@ -191,9 +196,8 @@ class StateComponent:
 
     @cardinal_direction.setter
     def cardinal_direction(self, value: Vector2) -> None:
-        self._cardinal_direction = (
-            value if value in FACINGS else self._cardinal_direction
-        )
+        direction_id: int = int(round((value.angle() / math.tau * len(FACINGS))))
+        self._cardinal_direction = FACINGS[direction_id]
 
     @property
     def decelerate_speed(self) -> float:

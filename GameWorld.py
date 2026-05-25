@@ -3,6 +3,7 @@ from py4godot import gdclass
 from py4godot.classes.Node2D import Node2D
 from py4godot.classes.Camera2D import Camera2D
 from py4godot.classes.TileMapLayer import TileMapLayer
+from ECS.Systems.AISystem import AISystem
 from ECS.Systems.AnimationSystem import AnimationSystem
 from ECS.Systems.CameraSystem import CameraSystem
 from ECS.Systems.HealthSystem import HealthSystem
@@ -24,6 +25,7 @@ class GameWorld(Node2D):
         esper.add_processor(CombatSystem())
         esper.add_processor(HealthSystem())
         esper.add_processor(CameraSystem())
+        esper.add_processor(AISystem())
 
         # Use one or the other
         # esper.add_processor(MovementSystem())

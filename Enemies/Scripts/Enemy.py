@@ -25,7 +25,7 @@ class Enemy(CharacterBody2D):
 
         self.entity = esper.create_entity(
             AnimationComponent(animator, sprite),
-            VelocityComponent(),
+            VelocityComponent(speed=100),
             BodyComponent(self),
             EnemyComponent(self),
         )

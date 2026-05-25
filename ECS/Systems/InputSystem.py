@@ -82,7 +82,5 @@ class InputSystem(esper.Processor):
 
                 # Update the player's cardinal_direction
                 if input_vector.length() > 0.0:
-                    direction_id: int = int(
-                        round((input_vector.angle() / math.tau * len(FACINGS)))
-                    )
-                    state.cardinal_direction = FACINGS[direction_id]
+                    # This is now automatically done by the StateComponent
+                    state.cardinal_direction = input_vector
