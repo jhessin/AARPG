@@ -1,6 +1,7 @@
 import esper
 from py4godot.classes.core import Vector2
 from ..components import (
+    HitboxComponent,
     State,
     StateComponent,
     AnimationComponent,
@@ -12,7 +13,7 @@ class AnimationSystem(esper.Processor):
     def process(self, _delta: float) -> None:
         del _delta
         # Query every entity in the game containing both data components
-        for _, (anim, state) in esper.get_components(
+        for ent, (anim, state) in esper.get_components(
             AnimationComponent, StateComponent
         ):
             if anim and state:
@@ -48,6 +49,12 @@ class AnimationSystem(esper.Processor):
 
                 # Put it all together
                 target_animation = f"{state.current}_{anim_direction}"
+
+                # Get the hitbox if there is one and store the animation duration in it.
+                if hitbox := esper.try_component(ent, HitboxComponent):
+                    hitbox.attack_duration = anim.animator.get_animation(
+                        target_animation
+                    ).get_length()
 
                 # Only play if we aren't already playing
                 if anim.animator.get_current_animation() != target_animation:

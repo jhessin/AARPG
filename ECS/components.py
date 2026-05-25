@@ -26,6 +26,14 @@ FACINGS = [
 ]
 
 
+def clamp(val: float, low: float, high: float):
+    return low if val < low else high if val > high else val
+
+
+def avg(*args: float) -> float:
+    return sum(args) / len(args)
+
+
 @dataclass
 class VelocityComponent:
     speed: float = 100.0
@@ -100,13 +108,10 @@ class InputComponent:
 @dataclass()
 class HitboxComponent:
     node: Area2D = field(default_factory=Area2D.new)
-    damage: float = 10.0
+    min_damage: float = 10.0
+    max_damage: float = 15.0
     knockback_force: float = 300.0
-
-
-@dataclass()
-class HurtboxComponent:
-    node: Area2D = field(default_factory=Area2D.new)
+    attack_duration: float = 0.0
 
 
 @dataclass()
@@ -117,3 +122,10 @@ class CameraComponent:
     # Flags for advanced camera states
     map_changed: bool = True
     is_active: bool = True
+
+
+@dataclass()
+class CameraShakeComponent:
+    duration: float = 0.2
+    intensity: float = 8.0
+    elapsed_time: float = 0.0

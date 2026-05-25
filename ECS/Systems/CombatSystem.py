@@ -1,13 +1,18 @@
 import esper
+import math
+from random import uniform
 from py4godot.classes.Area2D import Area2D
 from py4godot.classes.Area2DTypedArray import Area2DTypedArray
 from ..components import (
     ENTITY_ID,
     BodyComponent,
+    CameraComponent,
+    CameraShakeComponent,
     HitboxComponent,
     HealthComponent,
-    HurtboxComponent,
     VelocityComponent,
+    avg,
+    clamp,
 )
 
 
@@ -38,21 +43,32 @@ class CombatSystem(esper.Processor):
                 if victim_area_node.has_meta(ENTITY_ID):
                     victim_ent = int(str(victim_area_node.get_meta(ENTITY_ID)))
 
-                    # If our victim doesn't have a hurtbox these aren't the
-                    # droids we are looking for 😁.
-                    if not esper.has_component(victim_ent, HurtboxComponent):
-                        continue
-
                     # Do not attack yourself
                     if attacker_ent == victim_ent:
                         continue
 
                     # Apply Damage
+                    damage_taken = uniform(hitbox.min_damage, hitbox.max_damage)
+                    knockback_applied = uniform(0, hitbox.knockback_force)
                     if victim_health := esper.try_component(
                         victim_ent, HealthComponent
                     ):
                         # process health stuff here
-                        victim_health.current -= hitbox.damage
+                        victim_health.current -= damage_taken
+
+                        # Shake the camera here
+                        if camera_list := esper.get_component(CameraComponent):
+                            camera_ent, _ = camera_list[0]
+
+                            esper.add_component(
+                                camera_ent,
+                                CameraShakeComponent(
+                                    clamp(
+                                        knockback_applied, 0.2, hitbox.attack_duration
+                                    ),
+                                    avg(knockback_applied, damage_taken),
+                                ),
+                            )
 
                     # Apply knockback direction if the victim has a body and
                     # VelocityComponent
@@ -66,6 +82,8 @@ class CombatSystem(esper.Processor):
                             - attacker_body.body.global_position
                         )
                         dir_vector = diff.normalized()
+                        if victim_body.body.is_queued_for_deletion():
+                            return
 
                         victim_vel.x = dir_vector.x * hitbox.knockback_force
                         victim_vel.y = dir_vector.y * hitbox.knockback_force
