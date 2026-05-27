@@ -1,6 +1,7 @@
 import esper
 
 
+from py4godot.classes.Node2D import Node2D
 from py4godot.classes.core import Vector2
 from ..components import (
     AIComponent,
@@ -17,9 +18,10 @@ class AISystem(esper.Processor):
         if not player_list:
             return
 
+        player: int
         player, _ = player_list[0]
-        player_body = esper.component_for_entity(player, BodyComponent).body
-        player_pos = player_body.global_position
+        player_body: Node2D = esper.component_for_entity(player, BodyComponent).body
+        player_pos: Vector2 = player_body.global_position
 
         # Loop through all enemies with AI
         for _, (ai, body, vel) in esper.get_components(
