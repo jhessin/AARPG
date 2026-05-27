@@ -1,9 +1,16 @@
 import esper
-from py4godot.classes.Node2D import Node2D
-from py4godot.classes.core import Vector2
 from py4godot.classes.CharacterBody2D import CharacterBody2D
+from py4godot.classes.core import Vector2
 
-from ..components import BodyComponent, State, StateComponent, VelocityComponent
+from ..components import (
+    AttackSlowComponent,
+    FacingComponent,
+    VelocityComponent,
+    KnockbackComponent,
+    BodyComponent,
+    StateComponent,
+    State,
+)
 
 
 class MovementSystem(esper.Processor):
@@ -11,31 +18,38 @@ class MovementSystem(esper.Processor):
         for ent, (vel, body_comp) in esper.get_components(
             VelocityComponent, BodyComponent
         ):
-            # Don't touch dead things!
-            if body_comp.body.is_queued_for_deletion():
+            body = body_comp.body
+
+            if body.is_queued_for_deletion():
                 continue
 
-            if state := esper.try_component(ent, StateComponent):
-                if state.current == State.ATTACK:
-                    vel.direction -= vel.direction * state.decelerate_speed * delta
+            multiplier: float = 1.0
 
-            if isinstance(body_comp.body, CharacterBody2D):
-                # delta slows my player to a crawl for some reason.
-                body_comp.body.velocity = vel.total_vel  # * delta
+            # Attack slow or freeze
+            state = esper.try_component(ent, StateComponent)
+            if state and state.current == State.ATTACK:
+                slow = esper.try_component(ent, AttackSlowComponent)
+                multiplier *= slow.factor if slow else 0.0
 
-                body_comp.body.move_and_slide()
-            elif isinstance(body_comp.body, Node2D):
-                # Calculate displacement
-                displacement = vel.total_vel * delta
+            # Base movement
+            movement: Vector2 = vel.total_vel * multiplier
 
-                # Apply velocity
-                cur_pos = body_comp.body.global_position
-                body_comp.body.global_position = Vector2.new3(
-                    cur_pos.x + displacement.x,
-                    cur_pos.y + displacement.y,
-                )
+            # Facing update (intentional movement only)
+            if movement.length() > 0:
+                facing = esper.try_component(ent, FacingComponent)
+                if facing:
+                    facing.set_from_vector(movement)
 
-            # apply friction to knockback effect afterward
-            FRICTION_COEFFICIENT = 10.0
-            vel.knockback *= max(0.0, 1.0 - FRICTION_COEFFICIENT * delta)
+            # Knockback
+            knock = esper.try_component(ent, KnockbackComponent)
+            if knock:
+                movement += knock.force
+                knock.force -= knock.force * knock.decay * delta
 
+            # Apply movement
+            if isinstance(body, CharacterBody2D):
+                body.velocity = movement
+                body.move_and_slide()
+            else:
+                displacement: Vector2 = movement * delta
+                body.global_position += displacement
