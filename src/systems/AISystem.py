@@ -3,55 +3,70 @@ import esper
 
 from py4godot.classes.core import Vector2
 from ..components import (
-    EnemyComponent,
+    AIComponent,
+    AIState,
+    BodyComponent,
     PlayerComponent,
-    State,
-    StateComponent,
     VelocityComponent,
 )
 
 
 class AISystem(esper.Processor):
-    def process(self, _delta: float) -> None:
-        del _delta
+    def process(self, delta: float) -> None:
         player_list = esper.get_component(PlayerComponent)
         if not player_list:
             return
 
-        _, player = player_list[0]
+        player, _ = player_list[0]
+        player_body = esper.component_for_entity(player, BodyComponent).body
+        player_pos = player_body.global_position
 
-        player_pos = player.model.global_position
-
-        for _enemy_ent, (enemy, vel, state) in esper.get_components(
-            EnemyComponent, VelocityComponent, StateComponent
+        # Loop through all enemies with AI
+        for _, (ai, body, vel) in esper.get_components(
+            AIComponent, BodyComponent, VelocityComponent
         ):
-            del _enemy_ent
-            if enemy.model.is_queued_for_deletion():
-                continue
+            ai.tick(delta)
+            pos = body.body.global_position
 
-            # if enemy is attacking don't move him.
-            if state.current == State.ATTACK:
-                continue
+            # Distance to player
+            to_player = player_pos - pos
+            dist = to_player.length()
 
-            # see if the enemy is being knocked back
-            if vel.direction.length() > vel.speed:
-                continue
+            # --- STATE LOGIC ---
+            #
+            match ai.state:
+                # 1. IDLE -> CHASE
+                case AIState.IDLE | AIState.WANDER:
+                    if dist < ai.aggro_range:
+                        ai.state = AIState.CHASE
+                        ai.target_entity = player
 
-            enemy_pos = enemy.model.global_position
-            diff = Vector2.new3(player_pos.x - enemy_pos.x, player_pos.y - enemy_pos.y)
+                # 2. CHASE -> ATTACK or RETURN
+                case AIState.CHASE:
+                    if dist < ai.attack_range:
+                        ai.state = AIState.ATTACK
+                    elif dist > ai.aggro_range * 1.5:
+                        ai.state = AIState.RETURN
 
-            distance = diff.length()
+                # 3. ATTACK -> CHASE (after bump)
+                case AIState.ATTACK:
+                    # Slime attacks by bumping; CombatSystem handles damage
+                    # After attacking, go back to chase
+                    # TODO: Place check here to see if the attack has finished for future enemies.
+                    ai.state = AIState.CHASE
 
-            # Check if the enemy is close enough to attack
-            if distance < enemy.attack_range:
-                vel.direction = Vector2.ZERO
+                # 4. RETURN -> IDLE
+                case AIState.RETURN:
+                    home = ai.spawn
+                    to_home = home - pos
+                    if to_home.length() < 4:
+                        ai.state = AIState.IDLE
 
-                # if the enemy has an attack animation place him in the attack state
-                if enemy.has_attack:
-                    state.current = State.ATTACK
-                continue
-
-            vel.direction = diff
-
-            if state.current == State.IDLE:
-                state.current = State.WALK
+            # --- MOVEMENT LOGIC ---
+            match ai.state:
+                case AIState.CHASE:
+                    vel.direction = to_player.normalized()
+                case AIState.RETURN:
+                    vel.direction = (ai.spawn - pos).normalized()
+                case _:
+                    vel.direction = Vector2.ZERO
