@@ -43,6 +43,10 @@ class HealthComponent:
             getattr(self, "_current", self._maximum), 0.0, self._maximum
         )
 
+    @property
+    def dead(self) -> bool:
+        return self._current <= 0
+
 
 @dataclass
 class HurtboxComponent:

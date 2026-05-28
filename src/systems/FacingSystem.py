@@ -1,12 +1,34 @@
 import esper
 from py4godot.classes.Node2D import Node2D
-from py4godot.classes.core import Vector2
 from py4godot.classes.Sprite2D import Sprite2D
+from py4godot.classes.core import Vector2
 
 from components import (
     FacingComponent,
     BodyComponent,
 )
+
+
+def find_first_sprite(node: Node2D) -> Sprite2D | None:
+    # Depth-first search for Sprite2D
+    for child in node.get_children():
+        if (s := Sprite2D.cast(child)) is not None:
+            return s
+        if isinstance(child, Node2D):
+            if (nested := find_first_sprite(child)) is not None:
+                return nested
+    return None
+
+
+def find_weapon_pivot(node: Node2D) -> Node2D | None:
+    # Depth-first search for any Node2D with "pivot" in its name
+    for child in node.get_children():
+        if isinstance(child, Node2D):
+            if "pivot" in str(child.name).lower():
+                return child
+            if (nested := find_weapon_pivot(child)) is not None:
+                return nested
+    return None
 
 
 class FacingSystem(esper.Processor):
@@ -17,31 +39,18 @@ class FacingSystem(esper.Processor):
             FacingComponent,
             BodyComponent,
         ):
-            node = body_comp.body
+            body = body_comp.body
 
             # ---------------------------------------------------------
-            # 1. Flip horizontally for left-facing orientation
+            # 1. Recursively find the first Sprite2D
             # ---------------------------------------------------------
-            # LEFT = (-1, 0)
-            sprite: Sprite2D | None = None
-            for child in node.get_children():
-                if (s := Sprite2D.cast(child)) is not None:
-                    sprite = s
-                    break
-
+            sprite = find_first_sprite(body)
             if sprite:
                 sprite.set_flip_h(facing.facing == Vector2.LEFT)
 
             # ---------------------------------------------------------
-            # 2. Flip weapon pivot if it exists
+            # 2. Recursively find the first pivot node
             # ---------------------------------------------------------
-            # This assumes your weapon pivot is a child named "WeaponPivot"
-            if node.has_node("WeaponPivot") and (
-                pivot := Node2D.cast(node.get_node("WeaponPivot"))
-            ):
-
-                # Mirror pivot horizontally
-                if facing.facing == Vector2.LEFT:
-                    pivot.scale.x = -1
-                else:
-                    pivot.scale.x = 1
+            pivot = find_weapon_pivot(body)
+            if pivot:
+                pivot.scale.x = -1 if facing.facing == Vector2.LEFT else 1

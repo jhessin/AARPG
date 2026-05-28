@@ -1,4 +1,5 @@
 import esper
+from random import uniform
 from py4godot.classes.core import Vector2
 
 from ..components import (
@@ -34,8 +35,8 @@ class CameraSystem(esper.Processor):
             shake = esper.try_component(cam_ent, CameraShakeComponent)
             if shake:
                 smoothed += Vector2.new3(
-                    shake.intensity * shake.noise_x,
-                    shake.intensity * shake.noise_y,
+                    shake.intensity * uniform(-1.0, 1.0),
+                    shake.intensity * uniform(-1.0, 1.0),
                 )
                 shake.duration -= delta
                 if shake.duration <= 0:
