@@ -162,7 +162,7 @@ class AIComponent:
 
 @dataclass
 class FacingComponent:
-    facing: Vector2 = Vector2.DOWN
+    _facing: Vector2 = field(default=Vector2.DOWN, init=False, repr=False)
     _entity_id: int = field(init=False, repr=False)
 
     def bind_entity(self, entity_id: int) -> None:
@@ -172,11 +172,25 @@ class FacingComponent:
     def id(self) -> int:
         return self._entity_id
 
+    @property
+    def animation_string(self) -> str:
+        match self.facing:
+            case Vector2.UP:
+                return "up"
+            case Vector2.DOWN:
+                return "down"
+            case _:
+                return "side"
+
+    @property
+    def facing(self) -> Vector2:
+        return self._facing
+
     def set_from_vector(self, vec: Vector2):
         if vec.length() == 0.0:
             return
         idx = int(round((vec.angle() / (2 * 3.14159)) * len(FACINGS))) % len(FACINGS)
-        self.facing = FACINGS[idx]
+        self._facing = FACINGS[idx]
 
 
 @dataclass

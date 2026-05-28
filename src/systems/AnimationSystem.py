@@ -1,70 +1,50 @@
 import esper
-from py4godot.classes.core import Vector2
-from ..components import (
-    HitboxComponent,
-    State,
-    StateComponent,
+from py4godot.classes.AnimationPlayer import AnimationPlayer
+
+from components import (
     AnimationComponent,
+    AnimationEventComponent,
+    StateComponent,
+    FacingComponent,
 )
 
 
 class AnimationSystem(esper.Processor):
-
     def process(self, _delta: float) -> None:
         del _delta
-        # Query every entity in the game containing both data components
-        for ent, (anim, state) in esper.get_components(
-            AnimationComponent, StateComponent
+
+        for ent, (anim, state, facing) in esper.get_components(
+            AnimationComponent,
+            StateComponent,
+            FacingComponent,
         ):
-            if anim and state:
-                # Flip the sprite if the cardinal_direction is facing left
-                anim.sprite.flip_h = state.cardinal_direction == Vector2.LEFT
+            player: AnimationPlayer = anim.player
 
-                # similarly scale the EffectAnchor to flip the effects if there
-                # is one
-                if anim.sprite.has_node("%EffectAnchor") and (
-                    effect_anchor := anim.sprite.get_node("%EffectAnchor")
-                ):
-                    effect_anchor.scale.x = (
-                        -1 if state.cardinal_direction == Vector2.LEFT else 1
-                    )
+            # ---------------------------------------------------------
+            # 1. Build animation name using your animation_string
+            # ---------------------------------------------------------
+            desired = f"{str(state.current)}_{facing.animation_string}"
 
-                # Get the directional portion of the animation to play
-                anim_direction = (
-                    "down"
-                    if state.cardinal_direction == Vector2.DOWN
-                    else "up" if state.cardinal_direction == Vector2.UP else "side"
-                )
+            # ---------------------------------------------------------
+            # 2. Update desired animation if changed
+            # ---------------------------------------------------------
+            if desired != anim.desired:
+                anim.desired = desired
 
-                # Pivot the weapon (Area2D) to match the direction the character
-                # is facing
-                if anim.weapon_pivot:
-                    anim.weapon_pivot.rotation_degrees = (
-                        0
-                        if state.cardinal_direction == Vector2.DOWN
-                        else (
-                            90
-                            if state.cardinal_direction == Vector2.LEFT
-                            else 180 if state.cardinal_direction == Vector2.UP else -90
-                        )
-                    )
+            # ---------------------------------------------------------
+            # 3. If desired != current, switch animations
+            # ---------------------------------------------------------
+            if anim.desired != anim.current:
+                anim.current = anim.desired
+                anim.finished = False
+                player.play(anim.current)
+                player.set_speed_scale(anim.speed)
 
-                # Put it all together
-                target_animation = f"{state.current}_{anim_direction}"
+            # ---------------------------------------------------------
+            # 4. Detect animation completion
+            # ---------------------------------------------------------
+            if not anim.finished and not player.is_playing():
+                anim.finished = True
 
-                # Get the hitbox if there is one and store the animation duration in it.
-                if hitbox := esper.try_component(ent, HitboxComponent):
-                    hitbox.attack_duration = anim.animator.get_animation(
-                        target_animation
-                    ).get_length()
-
-                # Only play if we aren't already playing
-                if anim.animator.get_current_animation() != target_animation:
-                    anim.animator.play(target_animation)
-
-                # Check for the finished animation flag when attacking
-                if state.current == State.ATTACK:
-                    if state.animation_is_finished:
-                        prev: State = state.previous
-                        state.current = prev
-                        state.animation_is_finished = False
+                if evt := esper.try_component(ent, AnimationEventComponent):
+                    evt.finished = True
