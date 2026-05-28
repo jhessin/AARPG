@@ -51,12 +51,12 @@ class Player(CharacterBody2D):
                 self,
             ),
             VelocityComponent(),
-            PlayerComponent(self),
-            AnimationComponent(animator, sprite, weapon_pivot),
+            PlayerComponent(),
+            AnimationComponent(animator),
             BodyComponent(self),
-            StateComponent(decelerate_speed=self.decelerate_speed),
+            StateComponent(),
             InputComponent(),
-            AudioComponent(self.audio_player, sounds),
+            AudioComponent(sounds),
             hit_box.component,
         )
 

@@ -2,14 +2,15 @@ import esper
 from random import uniform
 from py4godot.classes.Area2D import Area2D
 from py4godot.classes.Area2DTypedArray import Area2DTypedArray
+
 from ..components import (
     ENTITY_ID,
+    HitboxComponent,
     BodyComponent,
+    HealthComponent,
+    KnockbackComponent,  # <-- use this now
     CameraComponent,
     CameraShakeComponent,
-    HitboxComponent,
-    HealthComponent,
-    VelocityComponent,
     avg,
     clamp,
 )
@@ -17,93 +18,75 @@ from ..components import (
 
 class CombatSystem(esper.Processor):
     def process(self, _delta: float) -> None:
-        # Not using delta so we can safely delete it for now.
         del _delta
-
-        # Loop through any entities with active attacking weapon components this requires a hitbox and a body
-        for attacker_ent, (hitbox, attacker) in esper.get_components(
+        # Loop through all entities with hitboxes
+        for attacker_ent, (hitbox, attacker_body) in esper.get_components(
             HitboxComponent, BodyComponent
         ):
-            # Access the node tracking property saved inside the component data
             hitbox_node: Area2D = Area2D.cast(hitbox.node)
 
-            # Check if we have already hit something or we are not attacking
+            # Skip if hitbox is disabled or missing
             if not hitbox_node or not hitbox_node.is_monitoring():
                 continue
 
-            # Query overlapping vectors natively
-            overlapping_areas: Area2DTypedArray = hitbox_node.get_overlapping_areas()
+            # Query overlapping areas
+            overlapping: Area2DTypedArray = hitbox_node.get_overlapping_areas()
 
-            # Loop through each area that was hit.
-            for i in range(overlapping_areas.size()):
-                victim_area_node: Area2D = Area2D.cast(overlapping_areas.get(i))
+            for i in range(overlapping.size()):
+                victim_area: Area2D = Area2D.cast(overlapping.get(i))
 
-                # Check for a hurtbox component
-                if victim_area_node.has_meta(ENTITY_ID):
-                    victim_ent = int(str(victim_area_node.get_meta(ENTITY_ID)))
+                # Check if this area belongs to an entity
+                if not victim_area.has_meta(ENTITY_ID):
+                    continue
 
-                    # Do not attack yourself
-                    if attacker_ent == victim_ent:
-                        continue
+                victim_ent = int(str(victim_area.get_meta(ENTITY_ID)))
 
-                    # Apply Damage
-                    damage_taken = uniform(hitbox.min_damage, hitbox.max_damage)
-                    knockback_applied = uniform(0, hitbox.knockback_force)
-                    if victim_health := esper.try_component(
-                        victim_ent, HealthComponent
-                    ):
-                        # process health stuff here
-                        victim_health.current -= damage_taken
-                        print(
-                            f"Attacker #{attacker_ent} is hitting #{victim_ent} for {damage_taken}"
+                # Don't hit yourself
+                if victim_ent == attacker_ent:
+                    continue
+
+                # --- Apply Damage ---
+                damage = uniform(hitbox.min_damage, hitbox.max_damage)
+                knockback_force = uniform(0, hitbox.knockback_force)
+
+                if victim_health := esper.try_component(victim_ent, HealthComponent):
+                    victim_health.current -= damage
+
+                    print(
+                        f"Attacker #{attacker_ent} hits #{victim_ent} for {damage:.1f}"
+                    )
+                    print(
+                        f"Entity #{victim_ent} HP: {victim_health.current}/{victim_health.maximum}"
+                    )
+
+                    # Camera shake
+                    if camera_list := esper.get_component(CameraComponent):
+                        cam_ent, _ = camera_list[0]
+                        esper.add_component(
+                            cam_ent,
+                            CameraShakeComponent(
+                                clamp(knockback_force, 0.2, hitbox.attack_duration),
+                                avg(knockback_force, damage),
+                            ),
                         )
-                        print(
-                            f"Entity #{victim_ent} HP: {victim_health.current}/{victim_health.maximum}"
-                        )
 
-                        # Shake the camera here
-                        if camera_list := esper.get_component(CameraComponent):
-                            camera_ent, _ = camera_list[0]
+                # --- Apply Knockback ---
+                victim_body = esper.try_component(victim_ent, BodyComponent)
+                if victim_body and not victim_body.body.is_queued_for_deletion():
+                    diff = (
+                        victim_body.body.global_position
+                        - attacker_body.body.global_position
+                    )
 
-                            if shake := esper.try_component(
-                                camera_ent, CameraShakeComponent
-                            ):
-                                shake.intensity += avg(knockback_applied, damage_taken)
-                                shake.duration = max(
-                                    shake.duration,
-                                    clamp(
-                                        knockback_applied, 0.2, hitbox.attack_duration
-                                    ),
-                                )
-                            else:
-                                esper.add_component(
-                                    camera_ent,
-                                    CameraShakeComponent(
-                                        clamp(
-                                            knockback_applied,
-                                            0.2,
-                                            hitbox.attack_duration,
-                                        ),
-                                        avg(knockback_applied, damage_taken),
-                                    ),
-                                )
+                    direction = diff.normalized()
 
-                    # Apply knockback direction if the victim has a body and
-                    # VelocityComponent
-                    if (
-                        victim_body := esper.try_component(victim_ent, BodyComponent)
-                    ) and (
-                        victim_vel := esper.try_component(victim_ent, VelocityComponent)
-                    ):
-                        diff = (
-                            victim_body.body.global_position
-                            - attacker.body.global_position
-                        )
-                        if victim_body.body.is_queued_for_deletion():
-                            continue
+                    # Ensure victim has a KnockbackComponent
+                    knock = esper.try_component(victim_ent, KnockbackComponent)
+                    if not knock:
+                        knock = KnockbackComponent()
+                        esper.add_component(victim_ent, knock)
 
-                        if diff.length() > 0.001:
-                            victim_vel.knockback = diff.normalized() * knockback_applied
+                    knock.force = direction * knockback_force
 
-                    # Disable the hitbox node until the next attack
-                    hitbox_node.call_deferred("set_monitoring", False)
+                # Disable hitbox until next attack
+                hitbox_node.call_deferred("set_monitoring", False)

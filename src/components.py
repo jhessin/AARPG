@@ -355,6 +355,7 @@ class BodyComponent:
 
     def bind_entity(self, entity_id: int) -> None:
         self._entity_id = entity_id
+        self.body.set_meta(ENTITY_ID, entity_id)
 
     @property
     def id(self) -> int:
@@ -396,6 +397,7 @@ class HurtboxComponent:
 
     def bind_entity(self, entity_id: int):
         self._entity_id = entity_id
+        self.node.set_meta(ENTITY_ID, entity_id)
 
     @property
     def id(self) -> int:
@@ -427,6 +429,7 @@ class HitboxComponent:
 
     def bind_entity(self, entity_id: int):
         self._entity_id = entity_id
+        self.node.set_meta(ENTITY_ID, entity_id)
 
     @property
     def id(self) -> int:
@@ -538,6 +541,17 @@ class CameraComponent:
     # Flags for advanced camera states
     map_changed: bool = True
     is_active: bool = True
+
+    _entity_id: int = field(init=False, repr=False)
+
+    def bind_entity(self, entity_id: int) -> None:
+        self._entity_id = entity_id
+        self.camera.set_meta(ENTITY_ID, entity_id)
+        self.tile_map.set_meta(ENTITY_ID, entity_id)
+
+    @property
+    def id(self) -> int:
+        return self._entity_id
 
 
 @dataclass

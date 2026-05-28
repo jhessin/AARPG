@@ -1,6 +1,6 @@
 {
   "reportUnusedVariable": "warning",
-  "typeCheckingMode": "strict",
+  "typeCheckingMode": "standard",
   "reportUnknownVariableType": "none",
   "reportMissingParameterType": "warning",
   "reportMissingTypeStubs": "none",
@@ -9,7 +9,4 @@
   "reportUntypedClassDecorator": "warning",
   "useLibraryCodeForTypes": true,
   "pythonPath": "addons/py4godot/cpython-3.14.3-windows64/python/python.exe",
-  "extraPaths": [
-    "./py4godot"
-  ]
 }
