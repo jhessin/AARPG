@@ -1,74 +1,70 @@
-import random
 import esper
-from py4godot.classes.Camera2D import Camera2D
 from py4godot.classes.core import Vector2
-from py4godot.classes.TileMapLayer import TileMapLayer
 
 from ..components import (
-    BodyComponent,
     CameraComponent,
     CameraShakeComponent,
+    BodyComponent,
     PlayerComponent,
 )
 
 
 class CameraSystem(esper.Processor):
     def process(self, delta: float) -> None:
+        # Get the camera entity (there should only be one)
+        for cam_ent, cam_comp in esper.get_component(CameraComponent):
+            camera = cam_comp.camera
+            tilemap = cam_comp.tile_map
 
-        camera_list = esper.get_component(CameraComponent)
-        if not camera_list:
-            return
+            # Find the player (or any entity with a BodyComponent marked as player)
+            target_pos: Vector2 | None = None
+            for _, (body, *_) in esper.get_components(BodyComponent, PlayerComponent):
+                target_pos = body.body.global_position
+                break
 
-        cam_ent, cam_comp = camera_list[0]
+            if target_pos is None:
+                return  # No player yet
 
-        if not cam_comp.is_active or not cam_comp.camera or not cam_comp.tile_map:
-            return
+            # --- Smooth follow ---
+            cam_pos = camera.global_position
+            desired = target_pos + cam_comp.offset
+            smoothed = cam_pos.lerp(desired, cam_comp.smoothing)
 
-        # Set camera bounds if needed
-        if cam_comp.map_changed:
-            cam: Camera2D = Camera2D.cast(cam_comp.camera)
-            tile_layer: TileMapLayer = TileMapLayer.cast(cam_comp.tile_map)
+            # --- Camera shake ---
+            shake = esper.try_component(cam_ent, CameraShakeComponent)
+            if shake:
+                smoothed += Vector2.new3(
+                    shake.intensity * shake.noise_x,
+                    shake.intensity * shake.noise_y,
+                )
+                shake.duration -= delta
+                if shake.duration <= 0:
+                    esper.remove_component(cam_ent, CameraShakeComponent)
 
-            tile_set = tile_layer.get_tile_set()
-            cell_size = tile_set.get_tile_size()
-            map_rect = tile_layer.get_used_rect()
+            # --- Clamp to tilemap bounds ---
+            rect = tilemap.get_used_rect()
+            cell_size = tilemap.tile_set.tile_size
 
-            cam.set_limit(0, map_rect.position.x * cell_size.x)
-            cam.set_limit(1, map_rect.position.y * cell_size.y)
-            cam.set_limit(2, (map_rect.position.x + map_rect.size.x) * cell_size.x)
-            cam.set_limit(3, (map_rect.position.y + map_rect.size.y) * cell_size.y)
-            cam_comp.map_changed = False
+            map_min = Vector2.new3(
+                rect.position.x * cell_size.x, rect.position.y * cell_size.y
+            )
+            map_max = Vector2.new3(
+                (rect.position.x + rect.size.x) * cell_size.x,
+                (rect.position.y + rect.size.y) * cell_size.y,
+            )
 
-        # Start with a clean position
-        target_position = cam_comp.camera.global_position
+            half_screen = cam_comp.half_screen_size
 
-        # Get the player so the camera can follow them.
-        player_list = esper.get_component(PlayerComponent)
-        if player_list:
-            player_ent, _ = player_list[0]
+            clamped = Vector2.new3(
+                max(
+                    map_min.x + half_screen.x,
+                    min(smoothed.x, map_max.x - half_screen.x),
+                ),
+                max(
+                    map_min.y + half_screen.y,
+                    min(smoothed.y, map_max.y - half_screen.y),
+                ),
+            )
 
-            if (cam_comp.is_active) and (
-                player_body := esper.try_component(player_ent, BodyComponent)
-            ):
-                target_position = player_body.body.global_position
-
-                # Smoothly update the camera's position to follow the player
-                # If you have Position Smoothing enabled on Camera2D, setting its global_position
-                # will let Godot's internal engine handle the interpolation interpolation cleanly!
-
-        if shake := esper.try_component(cam_ent, CameraShakeComponent):
-            shake.elapsed_time += delta
-
-            if shake.elapsed_time >= shake.duration:
-                esper.remove_component(cam_ent, CameraShakeComponent)
-            else:
-                current_fade = 1.0 - (shake.elapsed_time / shake.duration)
-                current_intensity = shake.intensity * current_fade
-
-                # Roll randomized screen offsets using standard python tools
-                offset_x = random.uniform(-current_intensity, current_intensity)
-                offset_y = random.uniform(-current_intensity, current_intensity)
-
-                target_position += Vector2.new3(offset_x, offset_y)
-
-        cam_comp.camera.global_position = target_position
+            # Apply final camera position
+            camera.global_position = clamped

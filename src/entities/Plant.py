@@ -1,38 +1,32 @@
 import esper
-
-from py4godot.classes import gdclass
+from py4godot import gdclass
 from py4godot.classes.Node2D import Node2D
 from py4godot.classes.Area2D import Area2D
 
-from ..components import (
+from components import (
     BodyComponent,
-    ENTITY_ID,
     HealthComponent,
-    VelocityComponent,
+    HurtboxComponent,
 )
 
 
 @gdclass
 class Plant(Node2D):
-    starting_health: float = 1.0
-
-    def __init__(self):
-        super().__init__()
-        self.entity: int = -1
+    hurtbox: Area2D
 
     def _ready(self) -> None:
+        body = BodyComponent(self)
+        health = HealthComponent(10)
+        hurtbox = HurtboxComponent(self.hurtbox)
 
-        self.entity = esper.create_entity(
-            HealthComponent(self, maximum=self.starting_health),
-            BodyComponent(self),
-            VelocityComponent(),
+        ent = esper.create_entity(
+            body,
+            health,
+            hurtbox,
         )
 
-        # Stamp the entity ID on the hurtbox component
-        self.set_meta(ENTITY_ID, str(self.entity))
+        body.bind_entity(ent)
+        health.bind_entity(ent)
+        hurtbox.bind_entity(ent)
 
-        raw_hurtbox = self.get_node("%HurtBox")
-        hurt_box: Area2D = Area2D.cast(raw_hurtbox)
-        hurt_box.set_meta(ENTITY_ID, str(self.entity))
-
-        self.add_to_group("Enemy")
+        self.entity = ent

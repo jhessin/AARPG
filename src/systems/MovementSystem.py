@@ -2,13 +2,13 @@ import esper
 from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.core import Vector2
 
-from ..components import (
-    AttackSlowComponent,
-    FacingComponent,
+from components import (
     VelocityComponent,
     KnockbackComponent,
     BodyComponent,
+    FacingComponent,
     StateComponent,
+    AttackSlowComponent,
     State,
 )
 

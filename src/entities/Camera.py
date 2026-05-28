@@ -10,6 +10,7 @@ from components import CameraComponent
 @gdclass
 class Camera(Camera2D):
     tile_map: TileMapLayer
+    NOTIFICATION_RESIZED: int
 
     def _ready(self) -> None:
         if not self.tile_map:
@@ -24,3 +25,14 @@ class Camera(Camera2D):
         cam_comp = CameraComponent(self, self.tile_map)
         self.entity = esper.create_entity(cam_comp)
         cam_comp.bind_entity(self.entity)
+
+    def _notification(self, what: int) -> None:
+        if what == self.NOTIFICATION_RESIZED:
+            self._update_half_screen_size()
+
+    def _update_half_screen_size(self) -> None:
+        viewport = self.get_viewport()
+        rect = viewport.get_visible_rect()
+
+        if cam_comp := esper.try_component(self.entity, CameraComponent):
+            cam_comp._half_screen_size = rect.size * 0.5

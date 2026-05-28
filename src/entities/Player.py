@@ -1,84 +1,51 @@
 import esper
-from py4godot.classes.Area2D import Area2D
+from py4godot import gdclass
 from py4godot.classes.CharacterBody2D import CharacterBody2D
-from py4godot.classes.InputEvent import InputEvent
-from py4godot.classes.AudioStream import AudioStream
-from py4godot.classes.AudioStreamPlayer2D import AudioStreamPlayer2D
-from py4godot.classes.Node2D import Node2D
-from py4godot.classes.Sprite2D import Sprite2D
-from py4godot.classes.AnimationPlayer import AnimationPlayer
-from py4godot.classes.ResourceLoader import ResourceLoader
-from py4godot import gdclass, gdmethod, gdproperty
-from py4godot.signals import Callable
-from .HitBox import HitBox
+from py4godot.classes.Area2D import Area2D
 
-from ..components import (
-    ENTITY_ID,
-    AnimationComponent,
+from components import (
     BodyComponent,
-    HealthComponent,
-    InputComponent,
     PlayerComponent,
+    HealthComponent,
     VelocityComponent,
     StateComponent,
-    AudioComponent,
-    ATTACK,
+    HitboxComponent,
+    HurtboxComponent,
 )
 
 
 @gdclass
 class Player(CharacterBody2D):
-    decelerate_speed: float = gdproperty(float, 5.0)
-
-    def __init__(self):
-        super().__init__()
-        self.entity = -1
+    hitbox: Area2D
+    hurtbox: Area2D
 
     def _ready(self) -> None:
-        sprite: Sprite2D = self.get_node("%PlayerSprite")
-        animator: AnimationPlayer = self.get_node("%AnimationPlayer")
-        self.audio_player: AudioStreamPlayer2D = self.get_node("%AudioPlayer")
-        hit_box: HitBox = self.get_node("%HitBox").get_pyscript()
-        weapon_pivot: Node2D = self.get_node("%WeaponPivot")
-        sound_path: str = "res://src/assets/Audio/SwordSwoosh.wav"
+        body = BodyComponent(self)
+        player = PlayerComponent()
+        health = HealthComponent(100)
+        velocity = VelocityComponent()
+        state = StateComponent()
 
-        attack_sound: AudioStream = ResourceLoader.instance().load(sound_path)
+        hitbox = HitboxComponent(self.hitbox)
+        hurtbox = HurtboxComponent(self.hurtbox)
 
-        sounds: dict[str, AudioStream] = {ATTACK: attack_sound}
-
-        self.entity = esper.create_entity(
-            HealthComponent(
-                self,
-            ),
-            VelocityComponent(),
-            PlayerComponent(),
-            AnimationComponent(animator),
-            BodyComponent(self),
-            StateComponent(),
-            InputComponent(),
-            AudioComponent(sounds),
-            hit_box.component,
+        ent = esper.create_entity(
+            body,
+            player,
+            health,
+            velocity,
+            state,
+            hitbox,
+            hurtbox,
         )
 
-        # Stamp entity ID
-        self.set_meta(ENTITY_ID, str(self.entity))
-        hit_box.set_meta(ENTITY_ID, str(self.entity))
-        self.get_node("%HurtBox").set_meta(ENTITY_ID, str(self.entity))
+        # Components handle stamping
+        body.bind_entity(ent)
+        player.bind_entity(ent)
+        health.bind_entity(ent)
+        velocity.bind_entity(ent)
+        state.bind_entity(ent)
+        hitbox.bind_entity(ent)
+        hurtbox.bind_entity(ent)
 
-        animator.animation_finished.connect(
-            Callable.new2(self, "_on_animation_finished")
-        )
-
-        self.add_to_group("Player")
-
-    def _unhandled_input(self, event: InputEvent) -> None:
-        if input_cmp := esper.try_component(self.entity, InputComponent):
-            input_cmp.queue.append(event.duplicate())
-
-    @gdmethod
-    def _on_animation_finished(self, anim_name: str) -> None:
-        anim_name = str(anim_name)
-        # Godot passes the name of the finished clip as a parameter
-        if anim_name.startswith(ATTACK):
-            if state := esper.try_component(self.entity, StateComponent):
-                state.animation_is_finished = True
+        self.entity = ent
