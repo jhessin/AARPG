@@ -77,7 +77,6 @@ class SimpleAIComponent:
     min_state_cycles: InitVar[int] = 1
     max_state_cycles: InitVar[int] = 3
     anim_length: InitVar[float] = 0.3
-    init_speed: InitVar[float] = 1.0
 
     _state: AIState = field(repr=False, init=False)
     _toggle_state: AIState = field(repr=False, init=False)
@@ -94,9 +93,7 @@ class SimpleAIComponent:
         min_state_cycles: int,
         max_state_cycles: int,
         anim_length: float,
-        init_speed: float,
     ):
-        self._speed = max(1.0, init_speed)
         self._state = AIState.IDLE
         self._toggle_state = AIState.WANDER
         self._max_state_cycles = max(max_state_cycles, 1)
@@ -123,10 +120,6 @@ class SimpleAIComponent:
     @property
     def state(self) -> AIState:
         return self._state
-
-    @property
-    def speed(self) -> float:
-        return self._speed
 
     def tick(self, delta: float):
         self._time_in_state += delta if delta > 0 else 0

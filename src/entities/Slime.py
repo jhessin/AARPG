@@ -22,7 +22,7 @@ class Slime(CharacterBody2D):
     health: float = 10
     min_damage: float = 1
     max_damage: float = 10
-    speed: float = 5.0
+    speed: float = 30.0
     min_state_cycles: int = 1
     max_state_cycles: int = 2
 
@@ -33,11 +33,10 @@ class Slime(CharacterBody2D):
         body = BodyComponent(self)
         enemy = EnemyComponent()
         health = HealthComponent(self.health)
-        velocity = VelocityComponent()
+        velocity = VelocityComponent(self.speed)
         ai = SimpleAIComponent(
             min_state_cycles=self.min_state_cycles,
             max_state_cycles=self.max_state_cycles,
-            init_speed=self.speed,
         )
         animation = AnimationComponent(self.get_node("%Animator"))
         collider: CollisionShape2D = self.get_node("%Collider")

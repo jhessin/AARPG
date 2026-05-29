@@ -166,7 +166,7 @@ health = 1
 [node name="Enemies" type="Node2D" parent="." unique_id=1923560601]
 
 [node name="Slime" parent="Enemies" unique_id=457936860 instance=ExtResource("5_o00ia")]
-position = Vector2(248, -266)
-health = 10
+position = Vector2(249, 47)
 min_damage = 10.0
 max_damage = 15.0
+speed = 30.0
