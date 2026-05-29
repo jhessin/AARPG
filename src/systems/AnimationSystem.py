@@ -2,11 +2,13 @@ from typing import Optional
 import esper
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 
+
 from ..components import (
     AnimationComponent,
     AnimationEventComponent,
     StateComponent,
     AIComponent,
+    SimpleAIComponent,
     FacingComponent,
 )
 
@@ -26,7 +28,9 @@ class AnimationSystem(esper.Processor):
             # 1. Build animation name using your animation_string
             # ---------------------------------------------------------
             desired: Optional[str] = None
-            if state := esper.try_component(ent, AIComponent):
+            if state := esper.try_component(ent, AIComponent) or (
+                state := esper.try_component(ent, SimpleAIComponent)
+            ):
                 desired = f"{(state.state)}_{facing.animation_string}"
             elif state := esper.try_component(ent, StateComponent):
                 desired = f"{(state.current)}_{facing.animation_string}"

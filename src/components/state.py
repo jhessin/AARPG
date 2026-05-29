@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field, InitVar
 from enum import Enum, auto
+from random import randint
 from typing import Optional
 from py4godot.classes.core import Vector2
 from .util import clamp, FACINGS, IDLE, WALK, ATTACK
@@ -69,6 +70,76 @@ class StateComponent:
 
     def tick(self, delta: float):
         self._time_in_state += max(delta, 0.0)
+
+
+@dataclass
+class SimpleAIComponent:
+    min_state_cycles: InitVar[int] = 1
+    max_state_cycles: InitVar[int] = 3
+    anim_length: InitVar[float] = 0.3
+    init_speed: InitVar[float] = 1.0
+
+    _state: AIState = field(repr=False, init=False)
+    _toggle_state: AIState = field(repr=False, init=False)
+    _min_state_cycles: int = field(repr=False, init=False)
+    _max_state_cycles: int = field(repr=False, init=False)
+    _anim_length: float = field(repr=False, init=False)
+    _speed: float = field(repr=False, init=False)
+    _timer: float = field(repr=False, init=False)
+    _time_in_state: float = field(init=False, repr=False)
+    _entity_id: int = field(init=False, repr=False)
+
+    def __post_init__(
+        self,
+        min_state_cycles: int,
+        max_state_cycles: int,
+        anim_length: float,
+        init_speed: float,
+    ):
+        self._speed = max(1.0, init_speed)
+        self._state = AIState.IDLE
+        self._toggle_state = AIState.WANDER
+        self._max_state_cycles = max(max_state_cycles, 1)
+        self._min_state_cycles = (
+            1
+            if min_state_cycles < 1
+            else (
+                min_state_cycles
+                if min_state_cycles < self._max_state_cycles
+                else self._max_state_cycles
+            )
+        )
+        self._anim_length = max(anim_length, 0.01)
+        self._timer = randint(min_state_cycles, max_state_cycles) * self._anim_length
+        self._time_in_state = 0
+
+    def bind_entity(self, entity_id: int) -> None:
+        self._entity_id = entity_id
+
+    @property
+    def id(self) -> int:
+        return self._entity_id
+
+    @property
+    def state(self) -> AIState:
+        return self._state
+
+    @property
+    def speed(self) -> float:
+        return self._speed
+
+    def tick(self, delta: float):
+        self._time_in_state += delta if delta > 0 else 0
+        print(f"Time in state: {self._time_in_state}")
+        print(f"Timer: {self._timer}")
+        print(f"Current State: {self.state}")
+        if self._time_in_state >= self._timer:
+            self._state, self._toggle_state = self._toggle_state, self._state
+            self._time_in_state = 0
+            self._timer = (
+                randint(self._min_state_cycles, self._max_state_cycles)
+                * self._anim_length
+            )
 
 
 @dataclass
