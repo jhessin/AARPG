@@ -3,6 +3,7 @@ from random import uniform
 from py4godot.classes.Area2D import Area2D
 from py4godot.classes.Area2DTypedArray import Area2DTypedArray
 
+
 from ..components import (
     ENTITY_ID,
     HitboxComponent,
@@ -19,6 +20,7 @@ from ..components import (
 class CombatSystem(esper.Processor):
     def process(self, _delta: float) -> None:
         del _delta
+
         # Loop through all entities with hitboxes
         for attacker_ent, (hitbox, attacker_body) in esper.get_components(
             HitboxComponent, BodyComponent

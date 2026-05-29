@@ -2,7 +2,7 @@ import esper
 from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.core import Vector2
 
-from components import (
+from ..components import (
     VelocityComponent,
     KnockbackComponent,
     BodyComponent,
@@ -10,11 +10,22 @@ from components import (
     StateComponent,
     AttackSlowComponent,
     State,
+    InputComponent,
 )
 
 
 class MovementSystem(esper.Processor):
     def process(self, delta: float) -> None:
+        # First process player input
+        for ent, (input, vel) in esper.get_components(
+            InputComponent, VelocityComponent
+        ):
+            vel.direction = Vector2.new3(
+                input.move_x,
+                input.move_y,
+            )
+
+        # Then move everything that can move
         for ent, (vel, body_comp) in esper.get_components(
             VelocityComponent, BodyComponent
         ):

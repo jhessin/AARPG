@@ -2,7 +2,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field, InitVar
 from typing import Tuple
 from py4godot.classes.Area2D import Area2D
-from py4godot.classes.core import Vector2
 from .util import clamp, ENTITY_ID
 
 

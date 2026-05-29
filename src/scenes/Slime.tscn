@@ -34,6 +34,93 @@ tracks/1/keys = {
 "values": [Vector2(0, -20)]
 }
 
+[sub_resource type="Animation" id="Animation_usjra"]
+resource_name = "attack_down"
+length = 0.3
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [9, 11]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [Vector2(0, -20), Vector2(0, -25)]
+}
+
+[sub_resource type="Animation" id="Animation_11ejh"]
+resource_name = "attack_side"
+length = 0.3
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [15, 17]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [Vector2(0, -20), Vector2(0, -25)]
+}
+
+[sub_resource type="Animation" id="Animation_kosm6"]
+resource_name = "attack_up"
+length = 0.3
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [12, 14]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [Vector2(0, -20), Vector2(0, -25)]
+}
+
 [sub_resource type="Animation" id="Animation_0ae7n"]
 resource_name = "idle_down"
 length = 0.4
@@ -211,6 +298,9 @@ tracks/1/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wyclx"]
 _data = {
 &"RESET": SubResource("Animation_wyclx"),
+&"attack_down": SubResource("Animation_usjra"),
+&"attack_side": SubResource("Animation_11ejh"),
+&"attack_up": SubResource("Animation_kosm6"),
 &"idle_down": SubResource("Animation_0ae7n"),
 &"idle_side": SubResource("Animation_qsqqn"),
 &"idle_up": SubResource("Animation_mjfjn"),
@@ -219,7 +309,7 @@ _data = {
 &"walk_up": SubResource("Animation_dkpye")
 }
 
-[node name="Slime" type="CharacterBody2D" unique_id=457936860]
+[node name="Slime" type="CharacterBody2D" unique_id=457936860 node_paths=PackedStringArray("hitbox", "hurtbox")]
 unique_name_in_owner = false
 process_mode = 0
 process_priority = 0
@@ -266,6 +356,8 @@ platform_floor_layers = 4294967295
 platform_wall_layers = 0
 safe_margin = 0.08
 script = ExtResource("1_wyclx")
+hitbox = NodePath("HitBox")
+hurtbox = NodePath("HurtBox")
 
 [node name="ShadowSprite" type="Sprite2D" parent="." unique_id=965217460]
 modulate = Color(0.38570002, 0.26234514, 0.0038247101, 1)

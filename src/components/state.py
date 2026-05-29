@@ -22,6 +22,13 @@ class AIState(Enum):
     ATTACK = auto()
     RETURN = auto()
 
+    def __str__(self) -> str:
+        match self:
+            case AIState.IDLE:
+                return IDLE
+            case _:
+                return WALK
+
 
 @dataclass
 class StateComponent:
@@ -162,7 +169,9 @@ class AIComponent:
 
 @dataclass
 class FacingComponent:
-    _facing: Vector2 = field(default=Vector2.DOWN, init=False, repr=False)
+    _facing: Vector2 = field(
+        default_factory=lambda: Vector2.DOWN, init=False, repr=False
+    )
     _entity_id: int = field(init=False, repr=False)
 
     def bind_entity(self, entity_id: int) -> None:

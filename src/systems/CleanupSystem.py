@@ -1,6 +1,6 @@
 # CleanupSystem
 import esper
-from components import HealthComponent, BodyComponent
+from ..components import HealthComponent, BodyComponent
 
 
 class CleanupSystem(esper.Processor):

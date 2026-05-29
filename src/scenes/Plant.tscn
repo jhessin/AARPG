@@ -10,7 +10,7 @@ size = Vector2(28, 31)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w3sfv"]
 size = Vector2(24, 16)
 
-[node name="Plant" type="Node2D" unique_id=1588986421]
+[node name="Plant" type="Node2D" unique_id=1588986421 node_paths=PackedStringArray("hurtbox")]
 unique_name_in_owner = false
 process_mode = 0
 process_priority = 0
@@ -38,7 +38,7 @@ rotation = 0.0
 scale = Vector2(1, 1)
 skew = 0.0
 script = ExtResource("1_akllp")
-starting_health = 1.0
+hurtbox = NodePath("HurtBox")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=7284371]
 position = Vector2(0, -9)

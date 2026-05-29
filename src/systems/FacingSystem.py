@@ -1,22 +1,39 @@
+from typing import Optional
 import esper
+from math import pi
 from py4godot.classes.Node2D import Node2D
 from py4godot.classes.Sprite2D import Sprite2D
+from py4godot.classes.CollisionShape2D import CollisionShape2D
 from py4godot.classes.core import Vector2
 
-from components import (
+from ..components import (
     FacingComponent,
     BodyComponent,
 )
 
 
 def find_first_sprite(node: Node2D) -> Sprite2D | None:
-    # Depth-first search for Sprite2D
+    s = Sprite2D.cast(node)
+    if s is not None:
+        return s
+
     for child in node.get_children():
-        if (s := Sprite2D.cast(child)) is not None:
+
+        # 1. Try to cast THIS child into a Sprite2D
+        s = Sprite2D.cast(child)
+        if s is not None:
             return s
-        if isinstance(child, Node2D):
-            if (nested := find_first_sprite(child)) is not None:
+
+        # 2. Do NOT recurse into CollisionShape2D
+        if CollisionShape2D.cast(child) is not None:
+            continue
+
+        # 3. Recurse only into Node2D children
+        if Node2D.cast(child) is not None:
+            nested = find_first_sprite(child)
+            if nested is not None:
                 return nested
+
     return None
 
 
@@ -41,16 +58,32 @@ class FacingSystem(esper.Processor):
         ):
             body = body_comp.body
 
+            if body is None:
+                continue
+
             # ---------------------------------------------------------
-            # 1. Recursively find the first Sprite2D
+            # 1. Flip the player sprite
             # ---------------------------------------------------------
-            sprite = find_first_sprite(body)
-            if sprite:
-                sprite.set_flip_h(facing.facing == Vector2.LEFT)
+            if body.has_node("%Sprite"):
+                sprite = body.get_node("%Sprite")
+                if sprite:
+                    sprite.set_flip_h(facing.facing == Vector2.LEFT)
+                else:
+                    print("NO SPRITE FOUND!!!")
 
             # ---------------------------------------------------------
             # 2. Recursively find the first pivot node
             # ---------------------------------------------------------
-            pivot = find_weapon_pivot(body)
-            if pivot:
-                pivot.scale.x = -1 if facing.facing == Vector2.LEFT else 1
+            if body.has_node("%WeaponPivot"):
+                pivot: Optional[Node2D] = body.get_node("%WeaponPivot")
+                if pivot:
+                    pivot.rotation = facing.facing.angle() - pi / 2
+                # else:
+                #     print("NO PIVOT FOUND")
+
+            if body.has_node("%EffectAnchor"):
+                pivot = body.get_node("%EffectAnchor")
+                if pivot:
+                    pivot.scale.x = -1 if facing.facing == Vector2.LEFT else 1
+                # else:
+                #     print("NO PIVOT FOUND")

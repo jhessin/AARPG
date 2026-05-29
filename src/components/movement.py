@@ -48,7 +48,7 @@ class VelocityComponent:
 
 @dataclass
 class KnockbackComponent:
-    force: Vector2 = Vector2.ZERO
+    force: Vector2 = field(default_factory=lambda: Vector2.ZERO)
     _decay: float = 10.0
 
     def __post_init__(self):

@@ -14,7 +14,7 @@ class CameraComponent:
 
     map_changed: bool = True
     is_active: bool = True
-    offset: Vector2 = field(default=Vector2.ZERO)
+    offset: Vector2 = field(default_factory=lambda: Vector2.ZERO)
     smoothing: float = 0.15
 
     _half_screen_size: Vector2 = field(init=False, repr=False)

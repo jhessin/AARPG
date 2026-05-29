@@ -3,7 +3,7 @@ from py4godot import gdclass
 from py4godot.classes.Node2D import Node2D
 from py4godot.classes.Area2D import Area2D
 
-from components import (
+from ..components import (
     BodyComponent,
     HealthComponent,
     HurtboxComponent,
@@ -13,10 +13,14 @@ from components import (
 @gdclass
 class Plant(Node2D):
     hurtbox: Area2D
+    health: float = 1
 
     def _ready(self) -> None:
+        if not self.hurtbox:
+            self.hurtbox = self.get_node("%HurtBox")
+
         body = BodyComponent(self)
-        health = HealthComponent(10)
+        health = HealthComponent(self.health)
         hurtbox = HurtboxComponent(self.hurtbox)
 
         ent = esper.create_entity(

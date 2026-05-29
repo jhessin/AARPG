@@ -4,7 +4,7 @@ from py4godot import gdclass
 from py4godot.classes.Camera2D import Camera2D
 from py4godot.classes.TileMapLayer import TileMapLayer
 
-from components import CameraComponent
+from ..components import CameraComponent
 
 
 @gdclass
@@ -13,6 +13,8 @@ class Camera(Camera2D):
     NOTIFICATION_RESIZED: int
 
     def _ready(self) -> None:
+        if not self.tile_map:
+            self.tile_map = self.get_node("%TileMap")
         if not self.tile_map:
             print("❌❌ YOU FORGOT TO ADD YOUR TILE MAP TO THE CAMERA ❌❌")
             return
