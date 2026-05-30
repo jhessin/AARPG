@@ -19,9 +19,9 @@ from ..components import (
 
 @gdclass
 class Slime(CharacterBody2D):
-    health: float = 10
-    min_damage: float = 1
-    max_damage: float = 10
+    health: int = 10
+    min_damage: int = 1
+    max_damage: int = 10
     speed: float = 30.0
     min_state_cycles: int = 1
     max_state_cycles: int = 2
@@ -39,14 +39,7 @@ class Slime(CharacterBody2D):
             max_state_cycles=self.max_state_cycles,
         )
         animation = AnimationComponent(self.get_node("%Animator"))
-        collider: CollisionShape2D = self.get_node("%Collider")
         facing = FacingComponent()
-
-        def new_collider() -> CollisionShape2D:
-            return collider.duplicate(7)
-
-        self.hitbox.add_child(new_collider())
-        self.hurtbox.add_child(new_collider())
 
         hitbox = HitboxComponent(self.hitbox, (self.min_damage, self.max_damage))
         hurtbox = HurtboxComponent(self.hurtbox)
