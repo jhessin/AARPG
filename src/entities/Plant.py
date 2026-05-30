@@ -19,20 +19,20 @@ class Plant(Node2D):
         health = HealthComponent(self.health)
         hurtbox = HurtboxComponent(self.hurtbox)
         anim = AnimationComponent(self.get_node("%Animator"))
-        simple = SimpleAIComponent()
+        vel = VelocityComponent()
 
         ent = esper.create_entity(
             body,
             health,
             hurtbox,
             anim,
-            simple,
+            vel,
         )
 
         body.bind_entity(ent)
         health.bind_entity(ent)
         hurtbox.bind_entity(ent)
         anim.bind_entity(ent)
-        simple.bind_entity(ent)
+        vel.bind_entity(ent)
 
         self.entity = ent

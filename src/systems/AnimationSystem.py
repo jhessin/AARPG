@@ -29,6 +29,8 @@ class AnimationSystem(esper.Processor):
                     continue
             elif state := esper.try_component(ent, SimpleAIComponent):
                 desired = str(state.state)
+            elif (health := esper.try_component(ent, HealthComponent)) and health.dead:
+                desired = DESTROY
             else:
                 continue
 
