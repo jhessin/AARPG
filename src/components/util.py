@@ -18,7 +18,7 @@ FACINGS: list[Vector2] = [
 ]
 
 
-def clamp(val: float, low: float, high: float) -> float:
+def clamp(val: float | int, low: float | int, high: float | int) -> float | int:
     return low if val < low else high if val > high else val
 
 

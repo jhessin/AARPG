@@ -12,7 +12,7 @@ class Player(CharacterBody2D):
     min_damage: float = 1
     max_damage: float = 10
     knockback_force: float = 200.0
-    health: float = 100
+    health: int = 100
 
     def _ready(self) -> None:
         self.hitbox = self.get_node("%HitBox")

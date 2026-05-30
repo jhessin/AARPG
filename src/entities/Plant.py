@@ -9,27 +9,30 @@ from ..components import *
 @gdclass
 class Plant(Node2D):
     hurtbox: Area2D
-    health: float = 1
+    health: int = 1
 
     def _ready(self) -> None:
         if not self.hurtbox:
             self.hurtbox = self.get_node("%HurtBox")
 
         body = BodyComponent(self)
-        vel = VelocityComponent()
         health = HealthComponent(self.health)
         hurtbox = HurtboxComponent(self.hurtbox)
+        anim = AnimationComponent(self.get_node("%Animator"))
+        simple = SimpleAIComponent()
 
         ent = esper.create_entity(
             body,
             health,
             hurtbox,
-            vel,
+            anim,
+            simple,
         )
 
         body.bind_entity(ent)
         health.bind_entity(ent)
         hurtbox.bind_entity(ent)
-        vel.bind_entity(ent)
+        anim.bind_entity(ent)
+        simple.bind_entity(ent)
 
         self.entity = ent

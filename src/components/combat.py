@@ -7,12 +7,12 @@ from .util import clamp, ENTITY_ID
 
 @dataclass
 class HealthComponent:
-    init_max: InitVar[float] = 100.0
-    _maximum: float = field(init=False, repr=False)
-    _current: float = field(init=False, repr=False)
+    init_max: InitVar[int] = 100
+    _maximum: int = field(init=False, repr=False)
+    _current: int = field(init=False, repr=False)
     _entity_id: int = field(init=False, repr=False)
 
-    def __post_init__(self, init_max: float):
+    def __post_init__(self, init_max: int):
         self.maximum = init_max
         self.current = self._maximum
 
@@ -29,17 +29,17 @@ class HealthComponent:
 
     @current.setter
     def current(self, value: float):
-        self._current = clamp(value, 0.0, self._maximum)
+        self._current = int(clamp(value, 0.0, self._maximum))
 
     @property
-    def maximum(self) -> float:
+    def maximum(self) -> int:
         return self._maximum
 
     @maximum.setter
-    def maximum(self, value: float):
-        self._maximum = max(value, 1.0)
-        self._current = clamp(
-            getattr(self, "_current", self._maximum), 0.0, self._maximum
+    def maximum(self, value: int):
+        self._maximum = max(value, 1)
+        self._current = int(
+            clamp(getattr(self, "_current", self._maximum), 0.0, self._maximum)
         )
 
     @property

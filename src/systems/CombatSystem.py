@@ -6,18 +6,6 @@ from py4godot.classes.Area2DTypedArray import Area2DTypedArray
 
 from ..components import *
 
-#     ENTITY_ID,
-#     HitboxComponent,
-#     BodyComponent,
-#     HealthComponent,
-#     # KnockbackComponent,  # <-- use this now
-#     SimpleAIComponent,
-#     CameraComponent,
-#     CameraShakeComponent,
-#     avg,
-#     clamp,
-# )
-
 
 class CombatSystem(esper.Processor):
     def process(self, _delta: float) -> None:

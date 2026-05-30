@@ -69,4 +69,3 @@ hframes = 6
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1457212274]
 libraries/ = SubResource("AnimationLibrary_b53b6")
-autoplay = &"destroy"

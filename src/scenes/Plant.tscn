@@ -3,12 +3,119 @@
 [ext_resource type="Script" path="res://src/entities/Plant.py" id="1_akllp"]
 [ext_resource type="Texture2D" uid="uid://cnn22w8owet0b" path="res://src/assets/sprites/Props.png" id="1_atxin"]
 [ext_resource type="PackedScene" uid="uid://dcypa038yepnq" path="res://src/scenes/HurtBox.tscn" id="2_e71d2"]
+[ext_resource type="Texture2D" uid="uid://dgt1jm1tscdbu" path="res://src/assets/sprites/DestroySmoke.png" id="4_f60ap"]
+
+[sub_resource type="Animation" id="Animation_f60ap"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_0sei5"]
+resource_name = "destroy"
+tracks/0/type = "animation"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DestroyEffectSprite/AnimationPlayer")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"clips": PackedStringArray("destroy"),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xw4if"]
+_data = {
+&"RESET": SubResource("Animation_f60ap"),
+&"destroy": SubResource("Animation_0sei5")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_akllp"]
 size = Vector2(28, 31)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w3sfv"]
 size = Vector2(24, 16)
+
+[sub_resource type="Animation" id="Animation_b53b6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_xtx5r"]
+resource_name = "destroy"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0999, 0.1998, 0.2997, 0.39960003, 0.4995),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5994),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b53b6"]
+_data = {
+&"RESET": SubResource("Animation_b53b6"),
+&"destroy": SubResource("Animation_xtx5r")
+}
 
 [node name="Plant" type="Node2D" unique_id=1588986421 node_paths=PackedStringArray("hurtbox")]
 unique_name_in_owner = false
@@ -47,6 +154,10 @@ texture = ExtResource("1_atxin")
 hframes = 16
 vframes = 3
 
+[node name="Animator" type="AnimationPlayer" parent="." unique_id=1259863105]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_xw4if")
+
 [node name="HurtBox" parent="." unique_id=1818104340 instance=ExtResource("2_e71d2")]
 unique_name_in_owner = true
 position = Vector2(0, -9)
@@ -63,3 +174,11 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1586321517]
 position = Vector2(0, 9)
 shape = SubResource("RectangleShape2D_w3sfv")
+
+[node name="DestroyEffectSprite" type="Sprite2D" parent="." unique_id=940330339]
+visible = false
+texture = ExtResource("4_f60ap")
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DestroyEffectSprite" unique_id=1457212274]
+libraries/ = SubResource("AnimationLibrary_b53b6")

@@ -19,6 +19,7 @@ def init_systems() -> list[esper.Processor]:
     esper.add_processor(AISystem())
     esper.add_processor(SimpleAISystem())
     esper.add_processor(CombatSystem())
+    esper.add_processor(HealthSystem())
     esper.add_processor(StateSystem())
     esper.add_processor(AnimationSystem())
     esper.add_processor(FacingSystem())

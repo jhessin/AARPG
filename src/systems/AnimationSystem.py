@@ -10,23 +10,25 @@ class AnimationSystem(esper.Processor):
     def process(self, _delta: float) -> None:
         del _delta
 
-        # This is for AI animation
-        for ent, (anim, facing) in esper.get_components(
-            AnimationComponent,
-            FacingComponent,
-        ):
+        desired: Optional[str] = None
+        # for simpler animations that don't require a facing
+        for ent, anim in esper.get_component(AnimationComponent):
             player: AnimationPlayer = anim.player
 
             # ---------------------------------------------------------
             # 1. Build animation name using your animation_string
             # ---------------------------------------------------------
-            desired: Optional[str] = None
-            if state := esper.try_component(ent, AIComponent) or (
-                state := esper.try_component(ent, SimpleAIComponent)
-            ):
-                desired = f"{(state.state)}_{facing.animation_string}"
-            elif state := esper.try_component(ent, StateComponent):
-                desired = f"{(state.current)}_{facing.animation_string}"
+            if facing := esper.try_component(ent, FacingComponent):
+                if state := esper.try_component(ent, AIComponent) or (
+                    state := esper.try_component(ent, SimpleAIComponent)
+                ):
+                    desired = f"{(state.state)}_{facing.animation_string}"
+                elif state := esper.try_component(ent, StateComponent):
+                    desired = f"{(state.current)}_{facing.animation_string}"
+                else:
+                    continue
+            elif state := esper.try_component(ent, SimpleAIComponent):
+                desired = str(state.state)
             else:
                 continue
 
@@ -47,8 +49,9 @@ class AnimationSystem(esper.Processor):
                 else:
                     evt = AnimationEventComponent(False)
                     esper.add_component(ent, evt)
-                player.play(anim.current)
-                player.set_speed_scale(anim.speed)
+                if player.has_animation(anim.current):
+                    player.play(anim.current)
+                    player.set_speed_scale(anim.speed)
 
             # ---------------------------------------------------------
             # 4. Detect animation completion
