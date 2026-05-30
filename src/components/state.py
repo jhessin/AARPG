@@ -4,7 +4,7 @@ from enum import Enum, auto
 from random import randint
 from typing import Optional
 from py4godot.classes.core import Vector2
-from .util import clamp, FACINGS, IDLE, WALK, ATTACK
+from .util import *
 
 
 class State(Enum):
@@ -22,11 +22,17 @@ class AIState(Enum):
     CHASE = auto()
     ATTACK = auto()
     RETURN = auto()
+    STUN = auto()
+    DEAD = auto()
 
     def __str__(self) -> str:
         match self:
             case AIState.IDLE:
                 return IDLE
+            case AIState.STUN:
+                return STUN
+            case AIState.DEAD:
+                return DESTROY
             case _:
                 return WALK
 
@@ -79,7 +85,6 @@ class SimpleAIComponent:
     anim_length: InitVar[float] = 0.3
 
     _state: AIState = field(repr=False, init=False)
-    _toggle_state: AIState = field(repr=False, init=False)
     _min_state_cycles: int = field(repr=False, init=False)
     _max_state_cycles: int = field(repr=False, init=False)
     _anim_length: float = field(repr=False, init=False)
@@ -95,7 +100,6 @@ class SimpleAIComponent:
         anim_length: float,
     ):
         self._state = AIState.IDLE
-        self._toggle_state = AIState.WANDER
         self._max_state_cycles = max(max_state_cycles, 1)
         self._min_state_cycles = (
             1
@@ -118,21 +122,29 @@ class SimpleAIComponent:
         return self._entity_id
 
     @property
+    def time_in_state(self) -> float:
+        return self._time_in_state
+
+    @property
+    def timer(self) -> float:
+        return self._timer
+
+    @property
     def state(self) -> AIState:
         return self._state
 
+    @state.setter
+    def state(self, value: AIState) -> None:
+        if value == self._state:
+            return
+        self._state = value
+        self._time_in_state = 0
+        self._timer = (
+            randint(self._min_state_cycles, self._max_state_cycles) * self._anim_length
+        )
+
     def tick(self, delta: float):
         self._time_in_state += delta if delta > 0 else 0
-        print(f"Time in state: {self._time_in_state}")
-        print(f"Timer: {self._timer}")
-        print(f"Current State: {self.state}")
-        if self._time_in_state >= self._timer:
-            self._state, self._toggle_state = self._toggle_state, self._state
-            self._time_in_state = 0
-            self._timer = (
-                randint(self._min_state_cycles, self._max_state_cycles)
-                * self._anim_length
-            )
 
 
 @dataclass

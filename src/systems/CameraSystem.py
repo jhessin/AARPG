@@ -2,12 +2,7 @@ import esper
 from random import uniform
 from py4godot.classes.core import Vector2
 
-from ..components import (
-    CameraComponent,
-    CameraShakeComponent,
-    BodyComponent,
-    PlayerComponent,
-)
+from ..components import *
 
 
 class CameraSystem(esper.Processor):

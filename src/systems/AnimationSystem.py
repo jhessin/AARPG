@@ -3,14 +3,7 @@ import esper
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 
 
-from ..components import (
-    AnimationComponent,
-    AnimationEventComponent,
-    StateComponent,
-    AIComponent,
-    SimpleAIComponent,
-    FacingComponent,
-)
+from ..components import *
 
 
 class AnimationSystem(esper.Processor):
@@ -49,6 +42,11 @@ class AnimationSystem(esper.Processor):
             if anim.desired != anim.current:
                 anim.current = anim.desired
                 anim.finished = False
+                if evt := esper.try_component(ent, AnimationEventComponent):
+                    evt.finished = False
+                else:
+                    evt = AnimationEventComponent(False)
+                    esper.add_component(ent, evt)
                 player.play(anim.current)
                 player.set_speed_scale(anim.speed)
 
@@ -60,3 +58,6 @@ class AnimationSystem(esper.Processor):
 
                 if evt := esper.try_component(ent, AnimationEventComponent):
                     evt.finished = True
+                else:
+                    evt = AnimationEventComponent(True)
+                    esper.add_component(ent, evt)

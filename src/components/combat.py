@@ -65,7 +65,7 @@ class HurtboxComponent:
 class HitboxComponent:
     node: Area2D
     damage_range: InitVar[Tuple[float, float]] = (1.0, 1.0)
-    init_knockback_force: InitVar[float] = 5.0
+    init_knockback_force: InitVar[float] = 200.0
     _min_damage: float = field(init=False, repr=False)
     _max_damage: float = field(init=False, repr=False)
     _knockback_force: float = field(init=False, repr=False)

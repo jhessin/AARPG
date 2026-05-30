@@ -2,55 +2,35 @@ import esper
 from py4godot import gdclass
 from py4godot.classes.AnimationPlayer import AnimationPlayer
 from py4godot.classes.CharacterBody2D import CharacterBody2D
-from py4godot.classes.Area2D import Area2D
-from py4godot.classes.ResourceLoader import ResourceLoader
 
 
-from ..components import (
-    BodyComponent,
-    PlayerComponent,
-    HealthComponent,
-    VelocityComponent,
-    StateComponent,
-    HitboxComponent,
-    HurtboxComponent,
-    InputComponent,
-    AnimationComponent,
-    FacingComponent,
-    AudioComponent,
-    ATTACK,
-)
+from ..components import *
 
 
 @gdclass
 class Player(CharacterBody2D):
-    hitbox: Area2D
-    hurtbox: Area2D
+    min_damage: float = 1
+    max_damage: float = 10
+    knockback_force: float = 200.0
+    health: float = 100
 
     def _ready(self) -> None:
-        if not self.hitbox:
-            self.hitbox = self.get_node("%HitBox")
-        if not self.hurtbox:
-            self.hurtbox = self.get_node("%HurtBox")
+        self.hitbox = self.get_node("%HitBox")
+        self.hurtbox = self.get_node("%HurtBox")
         animation_player: AnimationPlayer = self.get_node("%AnimationPlayer")
 
         animation = AnimationComponent(animation_player)
         input = InputComponent()
         body = BodyComponent(self)
         player = PlayerComponent()
-        health = HealthComponent(100)
+        health = HealthComponent(self.health)
         velocity = VelocityComponent()
         state = StateComponent()
         facing = FacingComponent()
-        audio = AudioComponent(
-            {
-                ATTACK: ResourceLoader.instance().load(
-                    "res://src/assets/sounds/SwordSwoosh.wav"
-                )
-            }
-        )
 
-        hitbox = HitboxComponent(self.hitbox)
+        hitbox = HitboxComponent(
+            self.hitbox, (self.min_damage, self.max_damage), self.knockback_force
+        )
         hurtbox = HurtboxComponent(self.hurtbox)
 
         ent = esper.create_entity(
@@ -64,7 +44,6 @@ class Player(CharacterBody2D):
             hurtbox,
             input,
             facing,
-            audio,
         )
 
         # Components handle stamping
@@ -78,6 +57,5 @@ class Player(CharacterBody2D):
         hitbox.bind_entity(ent)
         hurtbox.bind_entity(ent)
         facing.bind_entity(ent)
-        audio.bind_entity(ent)
 
         self.entity = ent

@@ -3,17 +3,11 @@ import esper
 
 
 from py4godot.classes.Node2D import Node2D
-from py4godot.classes.CharacterBody2D import CharacterBody2D
 from py4godot.classes.core import Vector2
-from ..components import (
-    AIComponent,
-    AIState,
-    BodyComponent,
-    PlayerComponent,
-    VelocityComponent,
-    SimpleAIComponent,
-    FACINGS,
-)
+
+from ..components import *
+
+KNOCKBACK_SPEED = 200.0
 
 
 class AISystem(esper.Processor):
@@ -26,22 +20,6 @@ class AISystem(esper.Processor):
         player, _ = player_list[0]
         player_body: Node2D = esper.component_for_entity(player, BodyComponent).body
         player_pos: Vector2 = player_body.global_position
-
-        # Loop through simple AI enemies
-        for _, (ai, body, vel) in esper.get_components(
-            SimpleAIComponent, BodyComponent, VelocityComponent
-        ):
-            ai.tick(delta)
-            pos = body.body.global_position
-
-            # Simple State Logic
-            match ai.state:
-                case AIState.IDLE:
-                    vel.direction = Vector2.ZERO
-                case AIState.WANDER:
-                    direction = randint(0, 3)
-                    if vel.direction == Vector2.ZERO:
-                        vel.direction = FACINGS[direction]
 
         # Loop through all enemies with AI
         for _, (ai, body, vel) in esper.get_components(

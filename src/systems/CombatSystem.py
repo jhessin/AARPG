@@ -4,17 +4,19 @@ from py4godot.classes.Area2D import Area2D
 from py4godot.classes.Area2DTypedArray import Area2DTypedArray
 
 
-from ..components import (
-    ENTITY_ID,
-    HitboxComponent,
-    BodyComponent,
-    HealthComponent,
-    KnockbackComponent,  # <-- use this now
-    CameraComponent,
-    CameraShakeComponent,
-    avg,
-    clamp,
-)
+from ..components import *
+
+#     ENTITY_ID,
+#     HitboxComponent,
+#     BodyComponent,
+#     HealthComponent,
+#     # KnockbackComponent,  # <-- use this now
+#     SimpleAIComponent,
+#     CameraComponent,
+#     CameraShakeComponent,
+#     avg,
+#     clamp,
+# )
 
 
 class CombatSystem(esper.Processor):
@@ -47,6 +49,14 @@ class CombatSystem(esper.Processor):
                 if victim_ent == attacker_ent:
                     continue
 
+                # Update states
+                if ai := esper.try_component(victim_ent, SimpleAIComponent):
+                    if ai.state == AIState.STUN:
+                        # Stunned enemies take no damage
+                        continue
+                    else:
+                        ai.state = AIState.STUN
+
                 # --- Apply Damage ---
                 damage = uniform(hitbox.min_damage, hitbox.max_damage)
                 knockback_force = uniform(0, hitbox.knockback_force)
@@ -68,7 +78,7 @@ class CombatSystem(esper.Processor):
                             cam_ent,
                             CameraShakeComponent(
                                 clamp(knockback_force, 0.2, hitbox.attack_duration),
-                                avg(knockback_force, damage),
+                                damage,
                             ),
                         )
 

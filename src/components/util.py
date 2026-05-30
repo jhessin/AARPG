@@ -4,6 +4,8 @@ from py4godot.classes.core import Vector2
 ATTACK: str = "attack"
 IDLE: str = "idle"
 WALK: str = "walk"
+STUN: str = "stun"
+DESTROY: str = "destroy"
 
 ENTITY_ID: str = "ecs_entity_id"
 MAX_ENGINE_SPEED: float = 1200.0

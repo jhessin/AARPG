@@ -39,6 +39,7 @@ script = ExtResource("1_wt17y")
 [node name="Player" parent="." unique_id=314937503 instance=ExtResource("4_o00ia")]
 unique_name_in_owner = true
 position = Vector2(260, 151)
+max_damage = 10
 
 [node name="TileMap" parent="." unique_id=589258009 instance=ExtResource("3_m8u5f")]
 unique_name_in_owner = true
@@ -105,63 +106,49 @@ y_sort_enabled = true
 
 [node name="Plant2" parent="Plants" unique_id=97495496 instance=ExtResource("4_is3ju")]
 position = Vector2(45, -54)
-health = 1
 
 [node name="Plant3" parent="Plants" unique_id=1150177857 instance=ExtResource("4_is3ju")]
 position = Vector2(107, -38)
-health = 1
 
 [node name="Plant4" parent="Plants" unique_id=1447187573 instance=ExtResource("4_is3ju")]
 position = Vector2(26, 258)
-health = 1
 
 [node name="Plant5" parent="Plants" unique_id=784554813 instance=ExtResource("4_is3ju")]
 position = Vector2(-112, 175)
-health = 1
 
 [node name="Plant9" parent="Plants" unique_id=1994304087 instance=ExtResource("4_is3ju")]
 position = Vector2(24, 162)
-health = 1
 
 [node name="Plant10" parent="Plants" unique_id=1425725363 instance=ExtResource("4_is3ju")]
 position = Vector2(349, 195)
-health = 1
 
 [node name="Plant11" parent="Plants" unique_id=897237835 instance=ExtResource("4_is3ju")]
 position = Vector2(602, -17)
-health = 1
 
 [node name="Plant14" parent="Plants" unique_id=186084983 instance=ExtResource("4_is3ju")]
 position = Vector2(519, -13)
-health = 1
 
 [node name="Plant12" parent="Plants" unique_id=558179738 instance=ExtResource("4_is3ju")]
 position = Vector2(438, -25)
-health = 1
 
 [node name="Plant13" parent="Plants" unique_id=102739944 instance=ExtResource("4_is3ju")]
 position = Vector2(503, -57)
-health = 1
 
 [node name="Plant15" parent="Plants" unique_id=1518540260 instance=ExtResource("4_is3ju")]
 position = Vector2(503, -57)
-health = 1
 
 [node name="Plant7" parent="Plants" unique_id=2002327250 instance=ExtResource("4_is3ju")]
 position = Vector2(-119, 231)
-health = 1
 
 [node name="Plant8" parent="Plants" unique_id=224605306 instance=ExtResource("4_is3ju")]
 position = Vector2(169, 305)
-health = 1
 
 [node name="Plant6" parent="Plants" unique_id=1684603606 instance=ExtResource("4_is3ju")]
 position = Vector2(120, 152)
-health = 1
 
 [node name="Plant" parent="Plants" unique_id=1588986421 instance=ExtResource("4_is3ju")]
 position = Vector2(176, 152)
-health = 1
+health = 50.0
 
 [node name="Enemies" type="Node2D" parent="." unique_id=1923560601]
 

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dnk2jpthv6755"]
 
 [ext_resource type="Script" path="res://src/entities/Plant.py" id="1_akllp"]
-[ext_resource type="Texture2D" uid="uid://cnn22w8owet0b" path="res://src/assets/Sprites/Props.png" id="1_atxin"]
+[ext_resource type="Texture2D" uid="uid://cnn22w8owet0b" path="res://src/assets/sprites/Props.png" id="1_atxin"]
 [ext_resource type="PackedScene" uid="uid://dcypa038yepnq" path="res://src/scenes/HurtBox.tscn" id="2_e71d2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_akllp"]
@@ -39,6 +39,7 @@ scale = Vector2(1, 1)
 skew = 0.0
 script = ExtResource("1_akllp")
 hurtbox = NodePath("HurtBox")
+health = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=7284371]
 position = Vector2(0, -9)
